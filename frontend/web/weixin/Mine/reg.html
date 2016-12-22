@@ -1,0 +1,413 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/style.css?v=0.01" rel="stylesheet" />
+		<script type="text/javascript" src="http://www.lovespace.cc/weixin/js/head.js"></script>
+    	<title>易租房</title>
+		<style type="text/css">
+			.smsButton {
+				height: 40px;
+				width: calc(30% - 5px);
+				font-size: 16px;
+				border: 1px;
+				border-style: solid;
+				border-color: #ccc;
+				/*color: black;*/
+				text-align: center;
+				margin: 0;
+				padding: 0;
+			}
+
+			.btn-green {
+				width: 80%;
+				margin-left: 10%;
+				height: 40px;
+				border-radius: 3px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">绑定微信-易租房</h1>
+		</header>
+		<div class="mui-content">
+			<div style="padding-top: 10%; margin-top: 10px;">
+				<input id="phone" type="text" class="inputBox" placeholder="手机号码" style="margin-left:10%;width: 80%;" />
+			</div>
+			<div style="">
+				<input id="smsCodeInput" type="number" class="inputBox" name="smsBox" placeholder="短信验证码" style="margin-left:10%;width: 50%; " />
+				<button id="smsButton" class="smsButton">发送验证码</button>
+			</div>
+
+			<!--<div align="left" style="padding-left: 10%;">
+				<input id="password" type="password" class="inputBox"  placeholder="请设置6-20位密码" style="width: 80%;" />
+			</div>
+			<div align="left" style="padding-left: 10%;">
+				<input id="passwordConfirm" type="password" class="inputBox"  placeholder="请确认6-20位密码" style="width: 80%;" />
+			</div>-->
+			
+			<div id="realNameDiv" class="mui-hidden" style="padding-left: 10%;">
+				<input type="text" class="inputBox" name="realName" id="realName" placeholder="真实姓名" style="width: 80%;" />
+			</div>
+			
+			<div id="identityCardInfo" class="mui-hidden" style="padding-left: 10%;">
+				<input type="text" class="inputBox" name="identityCard" id="identityCard" placeholder="身份证号" style="width: 80%;" />
+			</div>
+
+			<div id="" style="">
+				<img id="headPic" class="mui-media-object mui-pull-left" style="margin-left: 10%; height: 80px;width: 80px;max-width: 30%;" src="../img/iconfont-tianjia.png">
+				<div class="mui-media-body " style="padding-top: 37px;">
+					<input id="nickname" type="text" class="inputBox " name="mobileNumber" id="nickname" placeholder="昵称" style="width: calc(80% - 90px);margin-left: 10px;" />
+
+				</div>
+<!-- 				<h5>头像可以直接修改</h5>
+				<h5>手机号不对外显示，无电话骚扰</h5> -->
+			</div>
+			<div id="regButton" class="submit-btn btn-green">提交</div>
+
+		</div>
+		<script src="../js/mui.min.js "></script>
+		<script src="../js/common/ajax.js" charset="UTF-8"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+		<script src="../js/head.image.upload.js?v=0.02"></script>
+		<script src="../js/common/common.js"></script>
+		<script src="../js/wxShare.js"></script>
+		
+		<script type="text/javascript ">
+		    var byId = function(id) {
+				return document.getElementById(id);
+			};
+			var loginUserInfo;
+			mui.init({
+				swipeBack: false
+			});
+			
+			mui.ready(function() {
+				loginUserInfo = JSON.parse(localStorage.getItem('zufangLoginUserInfo'));
+				var url = 'http://www.lovespace.cc/weixin/Mine/reg.html';
+				upload.setHostUrl(url);
+				upload.initJssdkConfig();
+				
+				initWxInfo();
+				//初始化微信分享
+				wxShare();
+			});
+			
+			var isSendingSms = false;
+			var accountBox;
+			var smsCounting = 30;
+			var nickName;
+			var headPic;
+			var secseq;
+			var passwordBox;
+			var smsBox ;
+			var regButton;
+			var toastMSG;
+		
+			//
+			(function($, doc) {
+				regButton = doc.getElementById('regButton');
+				accountBox = doc.getElementById('phone');
+				passwordBox = doc.getElementById('password');
+				nickName = byId("nickname");
+				headPic = byId("headPic");
+				var passwordConfirmBox = doc.getElementById('passwordConfirm');
+				smsBox = doc.getElementById('smsCodeInput');
+				regButton.addEventListener('tap', function(event) {
+					if (accountBox.value.length != 11) {
+						toastMSG = '手机号码不正确';
+						mui.toast(toastMSG);
+						return;
+					}
+//					if (passwordBox.value.length < 6) {
+//						toastMSG = '密码长度不能小于6位';
+//						mui.toast(toastMSG);
+//						return;
+//					}
+					if (smsBox.value.length < 4) {
+						toastMSG = '验证码不正确';
+						mui.toast(toastMSG);
+						return;
+					}
+//					var passwordConfirm = passwordConfirmBox.value;
+//					if (passwordConfirm != passwordBox.value) {
+//						mui.toast('密码两次输入不一致');
+//						return;
+//					}
+					if(getByteLen(nickName.value.trim()) < 1)
+					{
+						toastMSG = '昵称不能为空';
+						mui.toast(toastMSG);
+						return;
+					}
+					
+					//alert('headPic:'+headPic.src);
+					var verifyInfo=new Object();
+					verifyInfo.phonenumber=accountBox.value;
+					verifyInfo.secseq=secseq;
+					verifyInfo.vcode=byId("smsCodeInput").value;
+					console.log('ajax_verify_verification_code '+JSON.stringify(verifyInfo));
+					ajax_verify_verification_code(verifyInfo,verifyverificationCodeSuccess,verifyverificationCodeFailed);
+					//commitReg();
+				});
+
+			}(mui, document));
+			
+			var smsSend = byId("smsButton");
+			//发送验证码
+			smsSend.addEventListener('tap', function() {
+				if (isSendingSms == true) {
+					//mui.toast("isSendingSms==true");
+				} else {
+					//var mobileNumber = 13636548541;
+					console.log("account="+accountBox.value);
+					if (accountBox.value.length != 11) {
+						mui.toast("手机号码不正确");
+					} else {
+						var ob=new Object();
+						ob.phone=accountBox.value;
+						ajax_get_verification_code(ob,getVerificationCodeSuccess,getVerificationCodeFailed);
+						//JSON发送验证码
+						//使submitButton有效
+						isSubmitAvailable = true;
+						//byId().style.backgroundColor = "darkorange";
+						//使smsButton无效
+						isSendingSms = true;
+						smsSend.style.backgroundColor = "gainsboro";
+						smsSend.innerHTML = smsCounting;
+						counting(smsSend);
+					}
+				}
+			});
+
+			function counting(smsButton) {
+				//倒计时
+				setTimeout(function() {
+					smsCounting--;
+					if (smsCounting > 0) {
+						smsButton.innerHTML = smsCounting;
+						setTimeout("counting(smsButton)", 1000);
+					} else {
+						//smsButton.style.backgroundColor = "darkorange";//#4cd964
+						smsButton.style.backgroundColor = "#4cd964";
+						smsButton.style.color = "#fff";
+						smsButton.innerHTML = "发送验证码";
+						isSendingSms = false;
+						smsCounting = 30;
+					}
+				}, 1000);
+			}
+			
+			function getVerificationCodeSuccess(data) {
+				console.log(JSON.stringify(data));
+				secseq=data.secseq;
+			}
+
+			function getVerificationCodeFailed(data) {
+				console.log(JSON.stringify(data));
+			}
+			function verifyverificationCodeSuccess(data) {
+				console.log(JSON.stringify(data));
+				
+				var picCnt = upload.files.length; 
+                console.log("picCnt:"+picCnt);
+                if(0 == picCnt)
+                {
+				    commitReg();
+				}
+                else
+                {
+                	upload.uploadPics(commitReg);
+                }
+				
+			}
+
+			function verifyverificationCodeFailed(data,options){
+				console.log(JSON.stringify(data.error));
+				toastMSG = '验证码不正确';
+				mui.toast(toastMSG);
+				var picCnt = upload.files.length;
+				console.log("picCnt:"+picCnt);
+				if(0 == picCnt)
+                {
+				    commitReg();
+				}
+                else
+                {
+                	upload.uploadPics(commitReg);
+                }
+			}
+			
+			
+			//增加注册按钮事件
+			/**
+			document.querySelector('#regButton').addEventListener('tap', function() {
+				console.log('regButton click');
+			    commitReg();
+			})
+			*/
+			
+			function initWxInfo()
+			{
+				//从缓存中获取 微信相关消息
+				
+				var nickname = loginUserInfo.nickname;
+				var headimgurl = loginUserInfo.picture;
+				//console.log('headimgurl:'+headimgurl);
+				//byId("nickname").value = nickname;
+				byId("headPic").src = headimgurl;
+			}
+			
+			function commitReg()
+			{
+				var userid = loginUserInfo.id;
+				var nickname = byId("nickname").value;
+				console.log('nickname:'+nickname);
+				
+				var phone = byId("phone").value;
+				console.log('phone:'+phone);
+				
+				var picture = byId("headPic").src;
+				console.log('picture:'+picture);
+				
+//				var password = byId("password").value;
+//				console.log('password:'+password);
+//				
+//				var confirmpasswd = byId("passwordConfirm").value;
+//				console.log('confirmpasswd:'+confirmpasswd);
+				
+//				if(password != confirmpasswd)
+//				{
+//					toastMSG = '两次密码不一样，请重新输入！';
+//					mui.toast(toastMSG);
+//					return;
+//				}
+				
+				var email = loginUserInfo.email;//先不填
+				var sex = loginUserInfo.sex;
+				var city = loginUserInfo.city;
+				var realname = loginUserInfo.realname;//先不填
+				var agentflag = '0';//
+				var identitycard = loginUserInfo.identitycard;//先不填
+			
+
+				var tags = loginUserInfo.tags;//默认为空
+
+				var userinfo=new Object();
+				userinfo.userid=userid;
+				userinfo.nickname=nickname;
+				userinfo.phone=phone;
+				userinfo.picture=picture;
+				userinfo.email=email;
+				userinfo.sex=sex;
+				userinfo.city=city;
+				userinfo.tags=tags;
+				userinfo.realname=realname;
+				userinfo.identitycard=identitycard;
+				userinfo.agentflag=agentflag;
+
+
+				ajax_modify_user_info(userinfo,modifyUserInfoSuccess,modifyUserInfoFail);
+				
+			}
+			
+
+			function modifyUserInfoSuccess(data)
+			{
+				console.log("modifyUserInfoSuccess: data is "+JSON.stringify(data));
+				//上传图片文件
+				if(data.rscode == 0)
+				{
+					// uploadPic();
+					//更新用户信息
+					getUserByid();
+				}
+				else
+				{
+					mui.toast('绑定用户手机号码失败:'+data.error);
+				}
+			}
+
+			function modifyUserInfoFail(data)
+			{
+				mui.toast('绑定用户手机号码失败:'+data);
+			}
+			
+			function getUserByid(){
+				var userid = loginUserInfo.id;
+				var obj=new Object();
+				obj.userid=userid;
+				ajax_get_user_info(obj,getUserInfoSuccess,getUserInfofail);
+			}
+
+			function getUserInfofail(data)
+			{
+				console.log('获取用户信息失败');
+				toastMSG = '网络异常，获取用户信息失败';
+			}
+            
+		    function getUserInfoSuccess(data)
+		    {
+		    	//根据openid 获取用户信息成功
+		    	console.log('获取用户信息成功');
+		    	console.log(JSON.stringify(data));
+		    	localStorage.setItem('zufangLoginUserInfo',JSON.stringify(data));
+		    	var url = localStorage.getItem('zufangRegAfterJumpUrl');
+		    	var jumpUrl = url;
+		    	if(!url || url == '')
+		    	{
+		    		jumpUrl = '../index.html';
+		    	}
+		    	
+		    	mui.toast('跳转至原页面');
+				mui.openWindow({
+					url: jumpUrl
+				});
+		    }
+			
+			function uploadPic()
+			{
+				console.log('uploadPic');
+				//如果头像文件修改过则上传图片文件
+				var type = "1";//表示头像
+				var status = "1";//表示初始状态
+				
+				var data = localStorage.getItem('zufangLoginUserInfo');
+				var user = JSON.parse(data);
+				var userid = user.id;
+				var houseid = '0';
+				var housepicsn = '0';
+				
+				var picCnt = upload.files.length;
+				console.log('picCnt is '+picCnt);
+				if(picCnt < 1)
+				{
+					return;
+				}
+				console.log('serverid is'+upload.serverId[0].toString());
+				console.log('localid is'+upload.files[0].path.toString());
+
+				var options = {
+					type: type,
+					userid: userid,
+					houseid: houseid,
+					housepicsn: housepicsn,
+					serverid: upload.serverId[0].toString(),
+					localid: upload.files[0].path.toString(),
+					url: "",
+					status: status
+				};
+				//alert(JSON.stringify(options));
+				ajax_add_weixin_pic(options);
+			}
+		</script>
+	</body>
+
+</html>

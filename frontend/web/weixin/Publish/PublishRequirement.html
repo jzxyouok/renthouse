@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="http://www.fangxh.cn/weixin/js/head.js"></script>
+    	<title>易租房</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css?v=0.01" />
+		<!-- <link rel="shortcut icon"  type="image/x-icon" href="img/favicon.ico"> -->
+
+		<style type="text/css">
+		    body {
+		    	font-size:12px;
+		    }
+		    p{
+		    	font-size: 12px;
+		    }
+		    .mui-input-row{
+		    	height: 30px;
+		    	width: 345;
+		    }
+		    p#hintline{
+		    	padding-top: 5px;
+		    }
+		    .mui-table-view-cell{
+		    	padding: 5px
+		    }
+			.mui-input-row label {
+				width: 25%;
+			}
+			.mui-input-row select {
+				font-size: 12px;
+			}
+			.mui-table-view .mui-media-object{
+				line-height: 64px!important;
+				max-width: 64px!important;
+				height: 64px!important;
+			}
+			input[type=text], select, textarea{
+				width: 25%;
+				height: 28px; 
+				padding: 3px 10px; 
+				font-size: 12px;
+			}
+			.mui-input-row .mui-btn {
+				padding-top: 6px;
+			}
+
+			.contained {
+				padding-right: 15px;
+				width: 100%;
+			}
+
+			.contained input{
+				margin-left: 15px;
+				margin-right: 5px;
+				vertical-align: middle;
+			}
+
+			.contained label{
+				margin-right: 15px;
+				vertical-align: middle;
+			}
+
+			.mui-table-view-cell:after {
+				right: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+        <header class="mui-bar mui-bar-nav" >
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发布求租信息</h1>
+		</header>
+		
+		<div class="mui-content">			
+			<section id="displayAfterLoginDiv" class="house-info-first">
+				<ul id="houseInfoList1" class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<p id="hintline">房源信息仅作为需求匹配，不会泄露个人隐私</p>
+							
+						</div>
+					</li>					
+				</ul>
+				
+				<ul id="houseInfoList2" class="mui-table-view">
+
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width:18%">预算</label>
+							<select id="id-price" class="mui-btn mui-btn-block" style="float:left;width:32%">
+								<option value="1000~2000">1000~2000</option>
+								<option value="2000~3000">2000~3000</option>
+								<option value="3000~4000">3000~4000</option>
+								<option value="4000~5000" selected="selected">4000~5000</option>
+								<option value="5000~6000">5000~6000</option>
+								<option value="6000~7000">6000~7000</option>
+								<option value="7000~8000">7000~8000</option>
+								<option value="8000~9000">8000~9000</option>
+								<option value="9000~10000">9000~10000</option>
+								<option value="10000~12000">10000~12000</option>
+								<option value="12000~14000">12000~14000</option>
+							</select>
+							<label style="width:25%">面积</label>
+							<select id="id-area" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="10~20">10~20</option>
+								<option value="20~50" selected="selected">20~50</option>
+								<option value="50~80">50~80</option>
+								<option value="80~100">80~100</option>
+								<option value="100~140">100~140</option>
+							</select>
+							
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width:25%">室</label>
+							<select id="id-roomCnt" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="1">1</option>
+								<option value="2" selected="selected">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+							</select>
+							
+							<label style="width:25%">厅</label>
+							<select id="id-hallCnt" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width:25%">厨</label>
+							<select id="id-kitchenCnt" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+							</select>
+							
+							<label style="width:25%">卫</label>
+							<select id="id-toiletCnt" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width:25%">装修类型</label>
+							<select id="id-decorate" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="毛坯">毛坯</option>
+								<option value="简装">简装</option>
+								<option value="中装">中装</option>
+								<option value="精装" selected="selected">精装</option>
+								<option value="豪装">豪装</option>
+							</select>
+							
+							<label style="width:25%">房屋类型</label>
+							<select id="id-apartmenttype" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="原房">原房</option>
+								<option value="隔断间">隔断间</option>
+							</select>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width:25%">求租方式</label>
+							<select id="id-renttype" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="整租">整租</option>
+								<option value="合租">合租</option>
+							</select>
+							
+							<label style="width:25%">需要做饭</label>
+							<select id="id-cooking" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="需要">需要</option>
+								<option value="不需要">不需要</option>
+							</select>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width:25%">付</label>
+							<select id="id-pay" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3" selected="selected">3</option>
+							</select>
+							
+							<label style="width:25%">押</label>
+							<select id="id-deposit" class="mui-btn mui-btn-block" style="float:left;width:25%">
+								<option value="1">1</option>
+								<option value="2">2</option>
+							</select>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div class="contained">
+							<input type="checkbox" id="id-airconditioning" onclick="setAirconditioning()"><label for=id-airconditioning >空调</label>
+							<input type="checkbox" id="id-washingmachine" onclick="setWashingmachine()"><label for=id-washingmachine >洗衣机</label>
+							<input type="checkbox" id="id-refrigerator" onclick="setRefrigerator()"><label for=id-refrigerator >冰箱</label></p>
+							<input type="checkbox" id="id-shower" onclick="setShower()"><label for=id-shower >淋浴</label>
+							<input type="checkbox" id="id-broadband" onclick="setBroadband()"><label for=id-broadband >宽带</label></p>
+							<input type="checkbox" id="id-accommodationproof" onclick="setAccommodationProof()"><label for=id-accommodationproof >需要房东协助办理（居住证/户口）所需的租房证明</label>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell" id="contractor">
+						<div class="col-xs-5 mui-text-left">
+							<p><span id="contactor-name">联系人：nickname  </span></p>
+						</div>
+						<div class="col-xs-7 mui-text-right">
+							<p id="contactor-tel" class="publish-date" style="">联系电话：13816256497</p>
+						</div>
+					</li>
+
+
+					<li class="mui-table-view-cell">
+						<div>
+							<label style="width: 90px;padding-left: 15px;">具体描述</label><br/>
+							<textarea id="id-description" rows="5" placeholder="请输入您的具体租房需求" style="width:calc(100% - 25px);height:100px;margin: 15px;"></textarea>
+						</div>
+					</li>
+
+					<li class="mui-table-view-cell">
+						<div>
+							<label style="width: 90px;padding-left: 15px;">委托给该区域的中介</label><br/>
+						</div>
+					</li>
+					<ul id="agentlistUl" class="mui-table-view">
+						<!-- <li class="mui-table-view-cell">
+							<div class="col-xs-2 mui-text-left">
+								<div class="col-xs-12 mui-text-left">
+									<img style="width:45px; height:45px; border-radius:100%;" src="http://www.zmzfang.com/images/head/5001.jpg" alt="个人头像">
+								</div>
+								<div class="col-xs-12 mui-text-left">
+									<p><span id="contactor-name">证监会主席</span></p>
+								</div>
+								<div class="col-xs-12 mui-text-left">
+									<p id="contactor-tel" class="publish-date" style="">12345678901</p>
+								</div>
+							</div>
+							<div class="col-xs-10 mui-text-right">
+								<input type="radio" name="agent" id="11962" onclick="getValue(this)">
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="col-xs-2 mui-text-left">
+								<div class="col-xs-12 mui-text-left">
+									<img style="width:45px; height:45px; border-radius:100%;" src="http://www.zmzfang.com/images/head/1478510954691332211.jpg" alt="个人头像">
+								</div>
+								<div class="col-xs-12 mui-text-left">
+									<p><span id="contactor-name">韩梅梅</span></p>
+								</div>
+								<div class="col-xs-12 mui-text-left">
+									<p id="contactor-tel" class="publish-date" style="">98765432109</p>
+								</div>
+							</div>
+							<div class="col-xs-10 mui-text-right">
+								<input type="radio" name="agent" id="11963" onclick="getValue(this)">
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<div class="col-xs-2 mui-text-left">
+								<div class="col-xs-12 mui-text-left">
+									<img style="width:45px; height:45px; border-radius:100%;" src="http://www.zmzfang.com/images/head/147912933939009693.jpg" alt="个人头像">
+								</div>
+								<div class="col-xs-12 mui-text-left">
+									<p><span id="contactor-name">李雷</span></p>
+								</div>
+								<div class="col-xs-12 mui-text-left">
+									<p id="contactor-tel" class="publish-date" style="">98765432109</p>
+								</div>
+							</div>
+							<div class="col-xs-10 mui-text-right">
+								<input type="radio" name="agent" id="11961" onclick="getValue(this)">
+							</div>
+						</li> -->
+					</ul>
+				</ul>
+
+			
+				<div style="text-align: center;padding-top: 10px;padding-buttom: 20px;">
+					<button id="nextStep" type="button" class="mui-btn" style="width: 80%;height: 40px;background-color: #4cd964;color: #fff;">
+					发布需求
+					</button>
+				</div>
+			</section>
+
+		</div>
+		
+		
+		
+		<script src="../js/mui.min.js" charset="UTF-8"></script>
+		<script src="../js/dom.create.js" charset="UTF-8"></script>
+		<script src="../js/common/ajax.js"></script>
+		<script src="../js/loginCheck.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/wxShare.js"></script>
+		<script type="text/javascript" charset="UTF-8">
+			var startSn = 0;
+		    var byId = function(id) {
+				return document.getElementById(id);
+			};
+			var loginUser;
+			var toastMSG;
+			mui.init({
+				swipeBack: false
+			});
+
+			var LoginUserInfo=new Object();
+
+			mui.ready(function() {
+				LoginUserInfo = JSON.parse(localStorage.getItem("zufangLoginUserInfo"));
+				modify();
+				wxShare();
+				getAgentList(0,6);
+			});
+
+			function modify(){
+				document.getElementById('contactor-name').innerHTML="联系人："+LoginUserInfo.nickname;
+				document.getElementById('contactor-tel').innerHTML="联系电话："+LoginUserInfo.phone;
+			}
+
+			function setAirconditioning(){
+				console.log('setAirconditioning');
+			}
+
+			function setWashingmachine(){
+				console.log('setWashingmachine');
+			}
+
+			function setRefrigerator(){
+				console.log('setRefrigerator');
+			}
+
+			function setShower(){
+				console.log('setShower');
+			}
+
+			function setBroadband(){
+				console.log('setBroadband');
+			}
+
+			function setAccommodationProof(){
+				console.log('setAccommodationProof');
+			}
+
+			// function check()
+			// {
+			// 	document.getElementById("check1").checked=true
+			// }
+			// function uncheck()
+			// {
+			// 	document.getElementById("check1").checked=false
+			// }
+
+			var gRequirement = JSON.parse(localStorage.getItem('Requirement'));
+			console.log("gRequirement.address "+gRequirement.address);
+
+			var cityend=gRequirement.address.indexOf("市");
+			var city=gRequirement.address.substr(0,cityend+1);
+			console.log('city is '+city);
+
+			var districtend=gRequirement.address.indexOf("区");
+			var district=gRequirement.address.substr(cityend+1,districtend-cityend);
+			console.log('district is '+district);
+
+			var start=gRequirement.address.indexOf("区")+1;
+			var xiaoqu=gRequirement.address.substr(start);
+		    document.getElementById("hintline").innerHTML="&nbsp;&nbsp;&nbsp;&nbsp;已选择小区: "+xiaoqu;
+		    
+		    //初始化用户信息及检查
+			initUserAndCheck();
+			function initUserAndCheck()
+			{
+				//			
+				//没有用户信息时的处理方式
+				var noPhoneRegAfterJumpUrl = 'http://www.lovespace.cc/?r=door/scope&view=Publish/PublishRequirement';//继续打开本页，不跳转
+				var hasPhoneJumpUrl = null;
+				checkUserPhone(noPhoneRegAfterJumpUrl,hasPhoneJumpUrl);
+			}
+			
+
+			//增加房源发布下一步按钮事件
+			document.querySelector('#nextStep').addEventListener('tap', function() {
+				addRequirement();				
+			}, false);
+
+			//实现checkbox的单选
+			// $(function(){  
+			// 	$(":checkbox").click(function(){
+			// 		console.log("click click");
+			// 		if($(this).attr("checked")!=undefined)
+			// 		{
+			// 			$(this).siblings().attr("checked",false);
+			// 			$(this).attr("checked",true);
+			// 		}
+			// 	});
+			// });
+
+
+			function addRequirement(){
+				var requirementInfo=new Object();
+				requirementInfo.userid=LoginUserInfo.id;
+				requirementInfo.city=city;
+				requirementInfo.district=district;
+				requirementInfo.court=xiaoqu;
+				requirementInfo.lat=gRequirement.lat;
+				requirementInfo.lng=gRequirement.lng;
+				requirementInfo.area=$("#id-area").val();
+				requirementInfo.price=$("#id-price").val();
+				requirementInfo.room=$("#id-roomCnt").val();
+				requirementInfo.hall=$("#id-hallCnt").val();
+				requirementInfo.kitchen=$("#id-kitchenCnt").val();
+				requirementInfo.toilet=$("#id-toiletCnt").val();
+				requirementInfo.decorate=$("#id-decorate").val();
+				requirementInfo.apartmenttype=$("#id-apartmenttype").val();
+				requirementInfo.renttype=$("#id-renttype").val();
+				requirementInfo.cooking=$("#id-cooking").val();
+				requirementInfo.pay=$("#id-pay").val();
+				requirementInfo.deposit=$("#id-deposit").val();
+				requirementInfo.airconditioning=($("#id-airconditioning").attr("checked")=="checked"?0:1);
+				requirementInfo.washingmachine=($("#id-washingmachine").attr("checked")=="checked"?0:1);
+				requirementInfo.refrigerator=($("#id-refrigerator").attr("checked")=="checked"?0:1);
+				requirementInfo.shower=($("#id-shower").attr("checked")=="checked"?0:1);
+				requirementInfo.broadband=($("#id-broadband").attr("checked")=="checked"?0:1);
+				requirementInfo.accommodationproof=($("#id-accommodationproof").attr("checked")=="checked"?0:1);
+				requirementInfo.contactor=LoginUserInfo.nickname;
+				requirementInfo.tel=LoginUserInfo.phone;
+				requirementInfo.description=$("#id-description").val();
+				requirementInfo.agentid=localStorage.getItem("agentId");
+				console.log(JSON.stringify(requirementInfo));
+
+				ajax_add_requirement(requirementInfo,addRequirementSuc,addRequirementFailed);
+			} 
+
+
+
+			function addRequirementSuc(data) {
+				console.log(JSON.stringify(data));
+				mui.openWindow({
+					url: '../index.html', 
+					id:'info'
+				});				
+			}
+
+			function addRequirementFailed(data,options){
+				console.log(JSON.stringify(data));
+				toastMSG = '发布需求失败';
+				mui.toast(toastMSG);
+			}
+			
+			function getValue(obj) { 
+			    var value = obj.id;
+			    console.log(value);
+			    localStorage.setItem("agentId",value);
+			}
+
+			
+			function getAgentList(startsn,countsn)
+			{
+				console.log("getAgentList");
+				var start = startsn;
+				var count = arguments[2] ? arguments[2] : 3;
+				var lng = gRequirement.lng;
+				console.log("lng is "+lng);
+				var lat = gRequirement.lat;
+				console.log("lat is "+lat);	
+				console.log("start is "+start);
+				console.log("count is "+count);
+				
+				var reqInfo=new Object();
+				reqInfo.lng=lng;
+				reqInfo.lat=lat;
+				reqInfo.start=start;
+				reqInfo.count=count;
+				ajax_get_agent_list(reqInfo,getAgentListSuccess,getAgentFailed);
+				// mask.close();
+			}
+			
+			//获取中介列表成功后的处理方法，新建li元素
+			function getAgentListSuccess(data,flag)
+			{
+				var agentlistUl=$('#agentlistUl');
+				if(!data){
+					mui.toast('未能获取到更多中介数据');
+					return ;
+				}
+
+				var firstFrag ='';
+				for(var i in data)
+				{
+					firstFrag +=fillAgentListLi(data[i]);
+				}
+				console.log('firstFrag is '+firstFrag);
+				startSn += data.length;
+				console.log(startSn);
+				
+				agentlistUl.append(firstFrag);
+			}
+
+			function getAgentFailed(data){
+				console.log(JSON.stringify(data));
+				toastMSG = '获取中介列表失败';
+				mui.toast(toastMSG);
+			}
+
+		</script>
+	</body>
+
+</html>

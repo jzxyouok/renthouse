@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>易租房</title>
+	<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/iconfont_new.css" />
+	<style type="text/css">
+		body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";font-size:14px;}
+		#l-map{height:100%;width:100%;z-index: 1;}
+		#r-result{
+			width: 30px;
+			height: 40px;
+			background-color: transparent;
+			float: left;
+			margin: 0px;
+			text-align: center;
+			vertical-align: center;
+			padding-top: 8px;
+			display: none;
+		}
+
+		.headbar {
+			position: absolute;
+			left: 0;
+			top:0;
+			width: calc(100% - 10px);
+			height: 36px;
+			margin: 5px;
+			vertical-align:center;
+			border-radius: 5px;
+			opacity: 0.8;
+		}
+
+		.leftbutton {
+			float: left;
+			width: 66px;
+			height: 36px;
+			margin: 2px;
+			vertical-align:center;
+			background-color: #fdd808;
+		}
+
+		.rightbutton {
+			float: left;
+			width: 66px;
+			height: 36px;
+			margin: 2px;
+			vertical-align:center;
+			background-color: #FFFFF0;
+		}
+
+		.mui-btn, button {
+			padding: 0px;
+		}
+
+		.headbar input[type=text] {
+			float: left;
+			width: 100%;
+			height: 36px;
+			margin: 0px;
+			vertical-align:center;
+			border-radius: 5px;
+		}
+
+		.footerbar {
+			position: absolute;
+			bottom: 5px;
+			right: 5px;
+			width: 40px;
+			height: 200px;
+			background-color: #555555;
+			opacity: 0.8;
+			border-radius: 3px;
+		}
+
+		.mylocation {
+			width: 36px;
+			height: 36px;
+			margin: 2px;
+			float: right;
+		}
+
+
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=3ipNwtWgUQWXKS7LuX8fi4mPSOx0QCBR"></script>
+</head>
+<body>
+	<div id="l-map"></div>
+	<div class="headbar">
+		<input class="searchareaname" type="text" id="suggestId" placeholder="搜小区">
+		<div id="r-result" >
+			<span class="mui-icon mui-icon-search"></span>
+		</div>
+		<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;">
+		</div>
+	</div>
+	<div class="footerbar">
+		<button id="leftbutton" type="button" class="mylocation mui-btn mui-btn-outlined">
+			<span id="leftbutton-span" class="mui-icon iconfont_new icon-zhaoren" style="font-size:30px;color: #fdd808;"></span>
+		</button></br>
+		<button id="rightbutton" type="button" class="mylocation mui-btn mui-btn-outlined">
+			<span id="rightbutton-span" class="mui-icon iconfont_new icon-searchHouse" style="font-size:30px;color: #aaaaaa;"></span>
+		</button></br>
+		<button id="location" type="button" class="mylocation mui-btn mui-btn-outlined">
+			<span class="mui-icon iconfont_new icon-dingwei" style="font-size:30px;color: rgb(0,0,255);"></span>
+		</button></br>
+		<button id="publish" type="button" class="mylocation mui-btn mui-btn-outlined">
+			<span class="mui-icon iconfont_new icon-house" style="font-size:24px;color: rgb(0,255,10);"></span>
+		</button>
+		<button id="mine" type="button" class="mylocation mui-btn mui-btn-outlined">
+			<span class="mui-icon iconfont_new icon-ke" style="font-size:24px;color: rgb(0,255,10);"></span>
+		</button>
+	</div>
+</body>
+</html>
+<script src="./js/mui.min.js" charset="UTF-8"></script>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/common/ajax.js"></script>
+<script type="text/javascript">
+
+	var gFangDongFangke;//0:FangDong 1:FangKe
+	var gSupplyment=new Object();
+	var gRequirement=new Object();
+	var map = new BMap.Map("l-map",{minZoom:6,maxZoom:20});
+
+	point=JSON.parse(localStorage.getItem("center"));
+	if(point){
+		console.log('restoreYourPosition  地图中心：'+point.lng+','+point.lat);
+		var apoint = new BMap.Point(point.lng,point.lat); 
+		map.centerAndZoom(apoint,12);
+		// getYourNeed();
+	}else{
+		map.centerAndZoom("上海",12);// 初始化地图,设置城市和地图级别。
+	}
+	
+	map.enableScrollWheelZoom(true);
+
+
+	mui.ready(function() {
+		initSearchBar();
+		bmapGetLocation();
+	});
+
+	function initSearchBar(){
+		if(isNaN(parseInt(localStorage.getItem('FangDongFangke')))){
+			console.log('gFangDongFangke is NaN');
+			gFangDongFangke=0;//0:FangDong 1:FangKe
+			content="搜小区，发布房源（我是房东，查看需求）";
+			$("#leftbutton-span").css("color","#fdd808");
+			$("#rightbutton-span").css("color","#aaaaaa");
+			
+		}else{
+			gFangDongFangke=parseInt(localStorage.getItem('FangDongFangke'));
+			console.log('gFangDongFangke is '+gFangDongFangke);
+			if(gFangDongFangke==0){
+				gFangDongFangke=0;//0:FangDong 1:FangKe
+				content="搜小区，发布房源（我是房东，查看需求）";
+				$("#leftbutton-span").css("color","#fdd808");
+				$("#rightbutton-span").css("color","#aaaaaa");
+			}else{
+				gFangDongFangke=1;
+				content="搜小区，发布需求（我是房客，查看房源）";
+				$("#rightbutton-span").css("color","#fdd808");
+				$("#leftbutton-span").css("color","#aaaaaa");
+			}
+		}
+		console.log("initFangDongFangKe: content: "+content);
+		$("#suggestId").attr("placeholder",content);
+	}
+
+	document.getElementById("leftbutton").addEventListener("tap",function(){
+		$("#leftbutton-span").css("color","#fdd808");
+		$("#rightbutton-span").css("color","#aaaaaa");
+		$("#suggestId").attr("value","");//清空输入
+		$("#suggestId").attr("placeholder","搜小区，发布房源（我是房东，查看需求）");//增加提示
+		$("#suggestId").css("background","#FFFFF0");
+		gFangDongFangke=0;
+		localStorage.setItem("FangDongFangke",gFangDongFangke);
+		localStorage.removeItem("Supplyment");
+		localStorage.removeItem("Requirement");
+		map.clearOverlays();
+		getYourNeed();
+	})
+
+	document.getElementById("rightbutton").addEventListener("tap",function(){
+		$("#rightbutton-span").css("color","#fdd808");
+		$("#leftbutton-span").css("color","#aaaaaa");
+		$("#leftbutton").css("color","rgb(0,0,255)");
+		$("#suggestId").attr("value","");//清空输入
+		$("#suggestId").attr("placeholder","搜小区，发布需求（我是房客，查看房源）");//增加提示
+		$("#suggestId").css("background","#FFFFF0");
+		gFangDongFangke=1;
+		localStorage.setItem("FangDongFangke",gFangDongFangke);
+		localStorage.removeItem("Supplyment");
+		localStorage.removeItem("Requirement");
+		map.clearOverlays();
+		getYourNeed();
+	})
+
+	document.getElementById("suggestId").addEventListener("tap",function(){
+		this.setAttribute("style","background-color: #fdd808;");
+		$("#suggestId").css("background","#FFFFF0");
+		$("#suggestId").attr("value","");//清空输入
+		// $("#suggestId").attr("placeholder","搜小区");//增加提示
+		initSearchBar();
+	})
+
+	document.getElementById("publish").addEventListener("tap",function(){
+		var Supplyment=localStorage.getItem('Supplyment');
+		var Requirement=localStorage.getItem('Requirement');
+		console.log("Supplyment is "+JSON.stringify(Supplyment));
+		console.log("Requirement is "+JSON.stringify(Requirement));
+		switch(gFangDongFangke) 
+		{
+			case 0://FangDong
+			{
+				if(Supplyment){
+					mui.openWindow({
+						url: 'http://www.lovespace.cc/?r=door/scope&view=Publish/PublishSupplyment', 
+						id:'info'
+					});
+					localStorage.setItem('FangDongFangke',gFangDongFangke);
+					saveYourPosition();
+				}
+				else{
+					$("#suggestId").attr("placeholder","请先搜索目标小区！");
+					$("#suggestId").css("background","#FF0000");
+				}
+				break;
+			}
+			case 1://FangKe
+			{
+				if(Requirement){
+					mui.openWindow({
+						url: 'http://www.lovespace.cc/?r=door/scope&view=Publish/PublishRequirement', 
+						id:'info'
+					});
+					localStorage.setItem('FangDongFangke',gFangDongFangke);
+					saveYourPosition();
+				}
+				else{
+					$("#suggestId").attr("placeholder","请先搜索目标小区！");
+					$("#suggestId").css("background","#FF0000");
+				}
+				break;
+			}
+			default:
+				alert('FangDongFangke error'+gFangDongFangke);
+				break;
+		}
+	})
+
+
+	document.getElementById("mine").addEventListener("tap",function(){
+		mui.openWindow({
+			url: 'http://www.lovespace.cc/weixin/mine.html', 
+			id:'info'
+		});
+		localStorage.setItem('FangDongFangke',gFangDongFangke);
+		saveYourPosition();
+	})
+
+
+	// 百度地图API功能
+	function G(id) {
+		return document.getElementById(id);
+	}
+
+	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+		{"input" : "suggestId"
+		,"location" : map
+	});
+
+	ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+	var str = "";
+		var _value = e.fromitem.value;
+		var value = "";
+		if (e.fromitem.index > -1) {
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}    
+		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+		
+		value = "";
+		if (e.toitem.index > -1) {
+			_value = e.toitem.value;
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}    
+		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+		G("searchResultPanel").innerHTML = str;
+	});
+
+	var myValue;
+	ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+	var _value = e.item.value;
+		myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		console.log("myValue"+JSON.stringify(myValue));
+		if(gFangDongFangke==0){//FangDong
+			gSupplyment.address=myValue;
+		}else if(gFangDongFangke==1){//FangKe
+			gRequirement.address=myValue;
+		}
+		G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+		
+		setPlace();
+	});
+
+	function setPlace(){
+		map.clearOverlays();    //清除地图上所有覆盖物
+		function myFun(){
+			var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+			// console.log("pp"+JSON.stringify(pp));
+			// console.log("lat is "+pp.lat+" lng is "+pp.lng)
+
+			if(gFangDongFangke==0){//FangDong
+				gSupplyment.lat=pp.lat;
+				gSupplyment.lng=pp.lng;
+				console.log("Supplyment"+JSON.stringify(gSupplyment));
+				localStorage.setItem("Supplyment",JSON.stringify(gSupplyment));
+			}else if(gFangDongFangke==1){//FangKe
+				gRequirement.lat=pp.lat;
+				gRequirement.lng=pp.lng;
+				console.log("Requirement"+JSON.stringify(gRequirement));
+				localStorage.setItem("Requirement",JSON.stringify(gRequirement));
+			}
+
+			map.centerAndZoom(pp, 18);
+			map.addOverlay(new BMap.Marker(pp));    //添加标注
+		}
+		var local = new BMap.LocalSearch(map, { //智能搜索
+		  onSearchComplete: myFun
+		});
+		local.search(myValue);
+	}
+
+	//找到我的当前位置，并且根据我的身份给出房源或者需求
+	function bmapGetLocation(){
+		var geolocation = new BMap.Geolocation();
+		var gc = new BMap.Geocoder();
+		geolocation.getCurrentPosition(function(r){  
+		    if(this.getStatus() == BMAP_STATUS_SUCCESS){
+		    	var icon = new BMap.Icon("images/location32.png",new BMap.Size(32,32));
+		    	var mk = new BMap.Marker(new BMap.Point(r.point.lng , r.point.lat), {icon:icon});
+
+		        // var mk = new BMap.Marker(r.point);
+		        map.addOverlay(mk);  
+		        map.panTo(r.point);  
+		        console.log('您的位置：'+r.point.lng+','+r.point.lat);       
+		          
+		        var pt = r.point;  
+		        // var message = "";  
+		        gc.getLocation(pt, function(rs){  
+		            var addComp = rs.addressComponents;
+		            console.log("addComp"+JSON.stringify(addComp));
+		            // alert(addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber);  
+		  
+		            var opts = {  
+						width : 250,     // 信息窗口宽度  
+						height: 50,     // 信息窗口高度  
+						title : "当前位置："  // 信息窗口标题  
+		            }  
+		            var infoWindow = new BMap.InfoWindow(addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber, opts);  // 创建信息窗口对象  
+		            // map.openInfoWindow(infoWindow,r.point); //开启信息窗口  
+		  
+		            // mk.addEventListener("click", function(){map.openInfoWindow(infoWindow,r.point);});  
+
+		            var point=new Object();
+					point.city=addComp.city;
+					point.district=addComp.district;
+					point.lng=r.point.lng;
+					point.lat=r.point.lat;
+
+					console.log(JSON.stringify(point));
+					if(gFangDongFangke==0){//fangdong
+						ajax_get_requirement(point,getRequirementSuc,getRequirementFailed);
+					}else if(gFangDongFangke==1){//fangke
+						ajax_get_supplyment(point,getSupplymentSuc,getSupplymentFailed);
+					}else{
+						console.log('gFangDongFangke error, value='+gFangDongFangke);
+					}
+		  
+		        });
+		          
+		    }  
+		    else {  
+		        alert('failed'+this.getStatus());  
+		    }          
+		})  
+	}
+
+	function saveYourPosition(){
+		var center = map.getCenter();    
+		console.log('saveYourPosition  地图中心：'+center.lng+','+center.lat); 
+		// console.log("center"+JSON.stringify(center));
+		localStorage.setItem("center",JSON.stringify(center));
+	}
+
+
+	$("#location").on("tap",bmapGetLocation);
+
+	//根据我的身份给出地图中心为原点一定半径范围内的房源或者需求
+	function getYourNeed(){
+		var center = map.getCenter();    
+		// alert("地图中心点变更为：" + center.lng + ", " + center.lat);  
+		console.log("getYourNeed: center"+JSON.stringify(center));
+
+		var gc = new BMap.Geocoder(); 
+		gc.getLocation(center, function(rs){
+			var AddComp = rs.addressComponents;
+			console.log("getYourNeed "+AddComp.province + ", " + AddComp.city + ", " + AddComp.district + ", " + AddComp.street + ", " + AddComp.streetNumber);
+
+			var point=new Object();
+			point.city=AddComp.city;
+			point.district=AddComp.district;
+			point.lng=center.lng;
+			point.lat=center.lat;
+
+			console.log(JSON.stringify(point));
+			if(gFangDongFangke==0){//fangdong
+				ajax_get_requirement(point,getRequirementSuc,getRequirementFailed);
+			}else if(gFangDongFangke==1){//fangke
+				ajax_get_supplyment(point,getSupplymentSuc,getSupplymentFailed);
+			}else{
+				console.log('gFangDongFangke error, value='+gFangDongFangke);
+			}
+		}); 
+	}
+
+
+    map.addEventListener("dragend", function(){  
+    	map.clearOverlays();
+		getYourNeed();
+	});
+
+
+    //map.addEventListener("dragging", function(){
+    	//map.clearOverlays();
+	//});    
+
+
+	//截取n位 
+    function getresult(num,n){ 
+        return num.toString().replace(new RegExp("^(\\-?\\d*\\.?\\d{0,"+n+"})(\\d*)$"),"$1"); 
+    } 
+
+
+	function getSupplymentSuc(data) {
+		var jsondata=JSON.stringify(data);
+		if(!data || data.length == 0){
+			return;
+		}
+		//console.log(jsondata);
+		//console.log('data len is '+data.length);
+		var mk=new Array();
+		//map.clearOverlays();
+		for(i=0;i<data.length;i++){
+			// console.log('lng['+i+']='+data[i]['lng']+'  lat['+i+']='+data[i]['lat']+'  redis_id['+i+']='+data[i]['redis_id']);
+
+			//设置marker图标为水滴
+			var icon = new BMap.Icon("images/house32.png",new BMap.Size(32,32));
+			mk[i] = new BMap.Marker(new BMap.Point(data[i]['lng'],data[i]['lat']), {icon: icon});
+			mk[i].setTitle(data[i]['redis_id']);
+
+		    map.addOverlay(mk[i]);
+		    (function(){
+		    	var index = i;
+			    mk[i].addEventListener('click', function(){
+			    	//console.log('lng is '+mk[index].getPosition().lng);
+			    	//console.log('lat is '+mk[index].getPosition().lat);
+			    	console.log('redis_id is '+mk[index].getTitle());
+					mui.openWindow({
+						url: './Publish/SupplymentList.html?lng='+getresult(mk[index].getPosition().lng,5)+'&lat='+getresult(mk[index].getPosition().lat,5),  
+						id:'info',
+					});
+					localStorage.setItem('FangDongFangke',gFangDongFangke);
+					saveYourPosition();
+				});
+			})();
+		}
+	}
+
+	function getSupplymentFailed(data,options){
+		console.log(JSON.stringify(data));
+		toastMSG = '获取房源失败';
+		mui.toast(toastMSG);
+	}
+
+	
+	function getRequirementSuc(data) {
+		var jsondata=JSON.stringify(data);
+		if(!data || data.length == 0){
+			return;
+		}
+		//console.log(jsondata);
+		var mk=new Array();
+		//map.clearOverlays();
+		for(i=0;i<data.length;i++){
+			//console.log('lng='+data[i]['lng']+'  lat='+data[i]['lat']);
+			//设置marker图标为水滴
+			var icon = new BMap.Icon("images/person32organ.png",new BMap.Size(32,32));
+			mk[i] = new BMap.Marker(new BMap.Point(data[i]['lng'],data[i]['lat']), {icon: icon});
+			mk[i].setTitle(data[i]['redis_id']);
+			
+		    map.addOverlay(mk[i]);
+
+		    (function(){
+        		var index = i;
+			    mk[i].addEventListener('click', function(){
+			    	//console.log('lng is '+mk[index].getPosition().lng);
+			    	//console.log('lat is '+mk[index].getPosition().lat);
+			    	console.log('redis_id is '+mk[index].getTitle());
+					mui.openWindow({
+						url: './Publish/RequirementList.html?lng='+getresult(mk[index].getPosition().lng,5)+'&lat='+getresult(mk[index].getPosition().lat,5), 
+						id:'info'
+					});
+					localStorage.setItem('FangDongFangke',gFangDongFangke);
+					saveYourPosition();
+				});
+			})();
+
+		}
+	}
+
+	function getRequirementFailed(data,options){
+		console.log(JSON.stringify(data));
+		toastMSG = '获取需求失败';
+		mui.toast(toastMSG);
+	}	
+
+</script>

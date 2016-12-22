@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="http://www.fangxh.cn/weixin/js/head.js"></script>
+    	<title>易租房</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css?v=0.01" />
+		<!-- <link rel="shortcut icon"  type="image/x-icon" href="img/favicon.ico"> -->
+
+		<style type="text/css">
+		    body {
+		    	font-size:12px;
+		    }
+		    p{
+		    	font-size: 12px;
+		    }
+		    .mui-input-row{
+		    	height: 30px;
+		    	width: 345;
+		    }
+		    p#hintline{
+		    	padding-top: 5px;
+		    }
+		    .mui-table-view-cell{
+		    	padding: 5px
+		    }
+			.mui-input-row label {
+				width: 25%;
+			}
+			.mui-input-row select {
+				font-size: 12px;
+			}
+			.mui-table-view .mui-media-object{
+				line-height: 64px!important;
+				max-width: 64px!important;
+				height: 64px!important;
+			}
+			input[type=text], select, textarea{
+				width: 25%;
+				height: 28px; 
+				padding: 3px 10px; 
+				font-size: 12px;
+			}
+			.mui-input-row .mui-btn {
+				padding-top: 6px;
+			}
+
+			.contained {
+				padding-right: 15px;
+				width: 100%;
+			}
+
+			.contained input{
+				margin-left: 15px;
+				margin-right: 5px;
+				vertical-align: middle;
+			}
+
+			.contained label{
+				margin-right: 15px;
+				vertical-align: middle;
+			}
+
+			.mui-table-view-cell:after {
+				right: 15px;
+			}
+
+		</style>
+	</head>
+
+	<body>
+        <header class="mui-bar mui-bar-nav" >
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">求租信息详情</h1>
+		</header>
+		<div class="mui-content">
+			<section id="displayAfterLoginDiv" class="house-info-first">
+				<ul id="houseInfoList1" class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<p id="hintline">房源信息仅作为需求匹配，不会泄露个人隐私</p>
+							
+						</div>
+					</li>					
+				</ul>
+				<ul id="houseInfoList2" class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label id="id-price" style="width:50%">预算</label>
+							<label id="id-area" style="width:50%">面积</label>							
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label id="id-roomCnt" style="width:50%">室</label>							
+							<label id="id-hallCnt" style="width:50%">厅</label>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label id="id-kitchenCnt" style="width:50%">厨</label>
+							<label id="id-toiletCnt" style="width:50%">卫</label>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label id="id-decorate" style="width:50%">装修类型</label>
+							<label id="id-apartmenttype" style="width:50%">房屋类型</label>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label id="id-renttype" style="width:50%">求租方式</label>							
+							<label id="id-cooking" style="width:50%">需要做饭</label>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label id="id-pay" style="width:50%">付</label>
+							<label id="id-deposit" style="width:50%">押</label>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="contained">
+							<input type="checkbox" id="id-airconditioning" onclick="return false;" checked="checked" ><label for=id-airconditioning >空调</label>
+							<input type="checkbox" id="id-washingmachine" onclick="return false;" checked="checked" ><label for=id-washingmachine >洗衣机</label>
+							<input type="checkbox" id="id-refrigerator" onclick="return false;" checked="checked" ><label for=id-refrigerator >冰箱</label></p>
+							<input type="checkbox" id="id-shower" onclick="return false;" checked="checked" ><label for=id-shower >淋浴</label>
+							<input type="checkbox" id="id-broadband" onclick="return false;" checked="checked" ><label for=id-broadband >宽带</label></p>
+							<input type="checkbox" id="id-accommodationproof" onclick="return false;" checked="checked" ><label for=id-accommodationproof >需要房东协助办理（居住证/户口）所需的租房证明</label>
+						</div>
+					</li>
+					<li class="mui-table-view-cell" id="contractor">
+						<div class="col-xs-5 mui-text-left">
+							<p><span id="contactor-name">联系人：nickname  </span></p>
+						</div>
+						<div class="col-xs-7 mui-text-right">
+							<p id="contactor-tel" class="publish-date" style="">联系电话：13816256497</p>
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div>
+							<label style="width: 90px;padding-left: 15px;">具体描述</label><br/>
+							<textarea id="detail" rows="5" placeholder="请输入您的具体租房需求" style="width:calc(100% - 25px);height:100px;margin: 15px;" ></textarea>
+						</div>
+					</li>
+				</ul>
+			</section>
+		</div>		
+		
+		<script src="../js/mui.min.js" charset="UTF-8"></script>	
+		<script src="../js/common/ajax.js"></script>
+		<script src="../js/common/common.js"></script>
+		<script src="../js/loginCheck.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/wxShare.js"></script>
+		<script type="text/javascript" charset="UTF-8">
+		    var byId = function(id) {
+				return document.getElementById(id);
+			};
+			var loginUser;
+			var toastMSG;
+			mui.init({
+				swipeBack: false
+			});
+			var LoginUserInfo=new Object();
+			mui.ready(function() {
+				LoginUserInfo = JSON.parse(localStorage.getItem("zufangLoginUserInfo"));
+				wxShare();
+				getRequirementById(reqObj);
+			});
+			var reqObj=new Object();
+			reqObj.userId=getQueryStrFromUrl('userId');
+			reqObj.requirementId=getQueryStrFromUrl('requirementId');
+
+			function getRequirementById(reqInfo){
+				ajax_get_requirement_by_id(reqInfo,getRequirementByIdSuc,getRequirementByIdFailed);
+			} 
+			function getRequirementByIdSuc(data) {
+				console.log(JSON.stringify(data));
+
+				var content="&nbsp;&nbsp;&nbsp;&nbsp;小区："+data.court;
+				console.log("content: "+content);
+				document.getElementById('hintline').innerHTML=content;
+
+				content="预算："+data.price+"元";
+				console.log("content: "+content);
+				document.getElementById('id-price').innerHTML=content;
+
+				content="面积："+data.area+"平米";
+				console.log("content: "+content);
+				document.getElementById('id-area').innerHTML=content;
+
+				content="室："+data.room;
+				console.log("content: "+content);
+				document.getElementById('id-roomCnt').innerHTML=content;
+
+				content="厅："+data.hall;
+				console.log("content: "+content);
+				document.getElementById('id-hallCnt').innerHTML=content;
+
+				content="厨："+data.kitchen;
+				console.log("content: "+content);
+				document.getElementById('id-kitchenCnt').innerHTML=content;
+
+				content="卫："+data.toilet;
+				console.log("content: "+content);
+				document.getElementById('id-toiletCnt').innerHTML=content;
+
+				content="装修类型："+data.decorate;
+				console.log("content: "+content);
+				document.getElementById('id-decorate').innerHTML=content;
+
+				content="房屋类型："+data.apartmenttype;
+				console.log("content: "+content);
+				document.getElementById('id-apartmenttype').innerHTML=content;
+
+				content="求租方式："+data.renttype;
+				console.log("content: "+content);
+				document.getElementById('id-renttype').innerHTML=content;
+
+				content="需要做饭："+data.cooking;
+				console.log("content: "+content);
+				document.getElementById('id-cooking').innerHTML=content;
+
+				content="付："+data.pay;
+				console.log("content: "+content);
+				document.getElementById('id-pay').innerHTML=content;
+
+				content="押："+data.deposit;
+				console.log("content: "+content);
+				document.getElementById('id-deposit').innerHTML=content;
+
+				if(data.airconditioning==1){
+					document.getElementById("id-airconditioning").checked=false
+				}
+				if(data.washingmachine==1){
+					document.getElementById("id-washingmachine").checked=false
+				}
+				if(data.refrigerator==1){
+					document.getElementById("id-refrigerator").checked=false
+				}
+				if(data.shower==1){
+					document.getElementById("id-shower").checked=false
+				}
+				if(data.broadband==1){
+					document.getElementById("id-broadband").checked=false
+				}
+				if(data.accommodationproof==1){
+					document.getElementById("id-accommodationproof").checked=false
+				}
+
+				content=data.description;
+				console.log("content: "+content);
+				$("#detail").attr("placeholder",content);
+
+
+				document.getElementById('contactor-name').innerHTML="联系人："+data.contactor;
+				document.getElementById('contactor-tel').innerHTML="联系电话："+data.tel;
+			}
+
+			function getRequirementByIdFailed(data,options){
+				console.log(JSON.stringify(data));
+				toastMSG = '获取需求失败';
+				mui.toast(toastMSG);
+			}
+			
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,181 @@
+/*2016-02 start*/
+
+.own-badge1 {
+	font-size: 10px;
+	line-height: 1;
+	display: inline-block;
+	padding: 2px 4px;
+	border-radius: 100px;
+	margin-left: 5px;
+	color: red;
+	border: thin solid red;
+}
+
+.own-badge2 {
+	font-size: 10px;
+	line-height: 1;
+	display: inline-block;
+	padding: 2px 4px;
+	border-radius: 100px;
+	margin-left: 5px;
+	color: white;
+	background-color: red;
+}
+
+.own-category-goods-titile {
+	font-family: 'microsoft yahei';
+	height: auto;
+	font-size: 13px;
+}
+
+.own-goods-titile {
+	font-family: 'microsoft yahei';
+	overflow: visible;
+	font-size: 13px;
+	margin-left: 5px;
+}
+
+.own-goods-spec {
+	font-family: 'microsoft yahei';
+	font-size: 12px;
+	margin-left: 5px;
+}
+
+.own-goods-saleprice {
+	font-family: 'microsoft yahei';
+	font-size: 14px;
+	color: red;
+	margin-left: 5px;
+}
+
+.own-goods-price {
+	font-family: 'microsoft yahei';
+	font-size: 12px;
+}
+
+.own-minus-goods {
+	/*border: 1px solid #ddd;
+	border-radius: 50%;*/
+	line-height: 1;
+	display: inline-block;
+	font-size: 24px;
+	font-weight: 500;
+	color: red;
+	background-color: white;
+}
+
+.own-add-div {
+	position: absolute;
+	bottom: 14px;
+	right: 14px;
+}
+
+.own-plus-goods {
+	/*border: 1px solid #ddd;
+	border-radius: 50%;*/
+	line-height: 1;
+	display: inline-block;
+	font-size: 24px;
+	font-weight: 500;
+	color: red;
+	background-color: white;
+}
+
+.own-replenishment {
+	font-size: 12px;
+	position: absolute;
+	bottom: 14px;
+	right: 12px;
+	color: red;
+}
+
+.own-num-index-badge {
+	font-size: 12px;
+	line-height: 1;
+	position: absolute;
+	display: inline-block;
+	padding: 2px 4px;
+	border-radius: 100px;
+	/*margin-left: 5px;*/
+	color: white;
+	background-color: red;
+}
+
+
+/*2016-02 end*/
+
+.own-font-bk {
+	border: 1px solid black;
+	height: 20px;
+	margin-bottom: 10px;
+}
+
+.own-wrap {
+	width: 30px;
+	height: 50px;
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.own-tupian {
+	width: 30px;
+	height: 20px;
+	font: 12px background-color: #35b558;
+}
+
+.own-text {
+	width: 30px;
+	height: 20px;
+	color: #666666;
+	font: 8px text-align: center;
+}
+
+.own-left-nav-color {
+	color: gray;
+}
+
+.own-main-color {
+	color: #41cea9;
+}
+
+.own-gray-color {
+	background-color: #EBEBF1;
+}
+
+.own-black-color {
+	color: black;
+}
+
+.own-text-through {
+	text-decoration: line-through;
+}
+
+.own-main-background-color {
+	background-color: darkorange
+}
+
+.own-header-hidden {
+	display: none!important;
+}
+
+.own-content-padding {
+	padding-top: 0 !important;
+}
+
+.own-btn-green {
+	color: #fff;
+	border: 1px solid #41cea9;
+	background-color: #41cea9;
+}
+
+.own-btn-green.mui-active:enabled,
+.own-btn-green:enabled:active {
+	color: #fff;
+	border: 1px solid #41dfa9;
+	background-color: #41dfa9;
+}
+
+.own-font-size {
+	font-size: 1em;
+}

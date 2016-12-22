@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="http://www.lovespace.cc/weixin/js/head.js"></script>
+    	<title>易租房</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css?v=0.01" />
+		<link rel="shortcut icon"  type="image/x-icon" src="img/favicon.ico">
+		<style type="text/css">
+			.flush-requirement {
+				width:80px;padding-bottom: 0px;
+                padding-top: 0px;
+                display: inline;
+                margin-bottom: 5px;
+			}
+		</style>
+		
+	</head>
+
+	<body>
+        <header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的需求</h1>
+			
+		</header>
+		
+		<div class="mui-content">
+			<div id="requirement">
+				<ul id='requirementUl' class="mui-table-view">					
+					<li id="promptDivLi" class="mui-table-view-cell mui-media mui-hidden">
+						<div id="promptDiv" class="prompt-div" style="text-align: center; margin-top: 1px;">
+							<span style="color: gray; font-size: 0.9em;">无需求</span>
+							<br />
+							<button id="publishRequirement" type="button" class="mui-btn " style="margin-top: 5px; padding: 5px 20px;background-color: #4cd964;color: #fff;">发布需求</button>
+						</div>
+					</li>
+
+			    </ul>
+			
+			</div>	
+		</div>
+		<div style="height: 50px;">
+		</div>
+		
+		<script src="../js/mui.min.js" charset="UTF-8"></script>
+		<script src="../js/common/ajax.js"></script>
+		<script src="../js/dom.create.js"></script>
+		<script src="../js/requirement.js"></script>
+		<script src="../js/wxShare.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script type="text/javascript" charset="UTF-8">
+			mui.init({
+				swipeBack: false
+			});
+			
+			mui.ready(function() {
+				$('#mineLink').addClass('mui-active');
+				var data = localStorage.getItem('zufangLoginUserInfo');
+				var user = JSON.parse(data);
+				
+				var userid = user.id;
+				console.log("userid:"+userid);
+
+				var userInfo=new Object();
+				userInfo.userid=userid;
+
+				ajax_get_requirement_byuserid(userInfo,getRequirementByUserIdSuccess,getRequirementByUserIdFailed);
+				
+				wxShare();
+			});
+			
+			//获取需求列表成功后的处理方法，新建li元素
+			function getRequirementByUserIdSuccess(data)
+			{
+				console.log('getRequirementByUserIdSuccess data:'+JSON.stringify(data));
+				
+				var requirementUl=document.getElementById('requirementUl');
+				var firstFrag = document.createDocumentFragment();
+				for(var i in data)
+				{
+					//var id=data[i].requirementid;
+					console.log('\n i:'+i);
+					firstFrag.appendChild(fillMyRequirementListLi(data[i]));
+				}
+				
+				requirementUl.innerHTML = "";
+				requirementUl.appendChild(firstFrag);
+				initFlushEvent();
+			}
+
+			function getRequirementByUserIdFailed(data)
+			{
+				console.log(JSON.stringify(data));
+				toastMSG = '获取需求列表失败';
+				mui.toast(toastMSG);
+			}
+	
+	        //增加需求列表中tap事件
+			mui('#requirementUl').on('tap', '.requirement-brief', function() {
+				var requirementId = this.getAttribute('requirement-id');
+				console.log('requirementId:'+requirementId);
+				localStorage.setItem("requirementId", requirementId);
+				var requiementPublishuserId = this.getAttribute('publishuser-id');
+
+				var dstUrl = './MyRequirementDetail.html?requirementId='+requirementId;
+				dstUrl += '&userId=' + requiementPublishuserId;
+				
+				mui.openWindow({
+					url: dstUrl,
+					id: 'MyRequirementDetail.html'
+				});
+			});
+			
+
+			function initFlushEvent()
+	        {
+	        	mui('#requirementUl').on('tap', '.flush-requirement', function() {
+	        		console.log('flush click');
+					var requirementId = this.getAttribute('requirement-id');
+					//console.log('recommendInfo houseId:'+houseId);
+					ajax_flush_requirement(
+						{
+							requirementid:requirementId
+						}
+					)
+	        	});
+	        }
+	        
+	        function flushRequirementSuccess(data)
+	        {
+	        	if(data.rscode == 0)
+	        	{
+	        		mui.toast('刷新成功！');
+	        		console.log('flush requirement success');
+	        	}
+	        	else
+	        	{
+	        		mui.toast('刷新失败了！请检查网络');
+	        		console.log('flush requirement wrong');
+	        	}
+	        }
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script type="text/javascript" src="http://www.lovespace.cc/weixin/js/head.js"></script>
+    	<title>易租房</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css?v=0.01">
+		<link rel="shortcut icon"  type="image/x-icon" href="../img/favicon.ico">
+
+		<style type="text/css">
+
+			.mui-table-view.mui-grid-view{
+				padding: 0;
+			}
+			
+			.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-9,.col-xs-10,.col-xs-12
+			{
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+			
+			.mui-scroll-wrapper
+			{
+				top: 44px;
+				bottom: 0px
+			}
+			.mui-table-view:first-child
+			{
+				margin-top:0px;
+			}
+			
+			.content{
+				font-size:.9rem;
+			}
+
+			.mui-table-view-cell{
+				padding-left:0px;
+				padding-right: 0px;
+			}
+			.col-xs-8 {
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+			.mui-text-right, .mui-text-left {
+				overflow: hidden;
+				height: 21px;
+			}
+		</style>
+	</head>
+
+	<body>
+        <header class="mui-bar mui-bar-nav" style="">
+        	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">求租列表</h1>
+         <!-- <div id="logo"><img src="http://www.lovespace.cc/weixin/img/banner.png" height="40" width="320" /></div> -->
+		</header>
+		
+		<div class="mui-content">
+			<div id="requirementDiv" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul id="requirementUl" class="mui-table-view">
+						<!--<li class="mui-table-view-cell mui-media" id="requirementid-7">
+							<div id="requirementBrief" class="requirement-brief" contactor="逍遥游" requirement-id="7">
+								<div class="col-xs-2 mui-text-center">
+									<div style="width:42px; height:60px;  overflow:hidden;">
+									<img style="width:42px; height:42px; border-radius:50%;" src="http://www.lovespace.cc.cc/images/head/14793583681503771296.jpg" alt="个人头像">
+									<div style="text-overflow: ellipsis;white-space: nowrap;text-align:center;margin-top:-4px;font-size:.5rem;overflow: hidden;">
+										wangxx
+									</div>
+									</div>
+								</div>
+								
+								<div class="col-xs-10">
+									<div>
+										<div class="col-xs-7 mui-text-left">
+											<p><span>2室</span> - <span>预算2元/月</span></p>
+										</div>
+										<div class="col-xs-5 mui-text-right">
+											<p class="publish-date" style="">10小时前</p>
+										</div>
+										
+									</div>
+									<div style="clear:both;">
+										<p style="text-overflow: ellipsis;white-space:nowrap;overflow:hidden;">阿科副科</p>
+										<p><span>联系人逍遥游</span> </p>
+										<p><span>电话18019398639</span></p>
+									</div>
+								</div>
+								
+							</div>
+						</li>-->
+					</ul>
+				</div>
+			</div>
+		
+		</div>
+		
+		<script src="../js/mui.min.js" charset="UTF-8"></script>
+		<script src="../js/dom.create.js" charset="UTF-8"></script>
+		<script src="../js/common/ajax.js" charset="UTF-8"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/wxShare.js"></script>
+		<script>
+			var startSn = 0;
+			var mask = mui.createMask(callback);
+			
+			mui.init(
+			{
+				swipeBack: false,
+				gestureConfig:{
+					doubletap:true
+				},
+			});
+			
+			mui('#requirementDiv').pullRefresh({
+				up: {
+						height:50,
+						contentrefresh: '正在加载...',
+						contentnomore:'没有更多数据了',
+						callback: pullupRefresh
+					}
+				}	
+			);
+			
+			mui.ready(function() {
+				wxShare({"link":"http://www.lovespace.cc/weixin/Publish/RequirementList.html"});
+				getRequirementList(0);
+			});
+
+			 //增加需求列表中tap事件
+			mui('#requirementUl').on('tap', 'li', function() {
+				var requirementId = $(this).children('#requirementBrief').attr('requirement-id');
+				localStorage.setItem("requirementId", requirementId);
+				var requiementPublishuserId = $(this).children('#requirementBrief').attr('publishuser-id');
+				
+				localStorage.setItem("requiementPublishuserId", requiementPublishuserId);
+				var dstUrl = './RequirementDetail.html?requirementId='+requirementId;
+				dstUrl += '&userId=' + requiementPublishuserId;
+
+				mui.openWindow({
+					url: dstUrl,
+					id: 'RequirementDetail.html'
+				});
+			});
+			
+			function getQueryString(name) {
+			    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			    var r = window.location.search.substr(1).match(reg);
+			    if (r != null) return unescape(r[2]); return null;
+		    }
+
+			function getRequirementList(startsn,countsn)
+			{
+				console.log("getRequirementList");
+				var start = startsn;
+				var count = arguments[1] ? arguments[1] : 20;
+				var lng = getQueryString('lng');
+				console.log("lng is "+lng);
+				var lat = getQueryString('lat');
+				console.log("lat is "+lat);	
+				console.log("start is "+start);
+				console.log("count is "+count);
+				
+				var reqInfo=new Object();
+				reqInfo.lng=lng;
+				reqInfo.lat=lat;
+				reqInfo.start=start;
+				reqInfo.count=count;
+				ajax_get_requirement_list(reqInfo,getRequirementListSuccess,getRequirementListFailed);
+				mask.close();
+			}
+			
+			//获取需求列表成功后的处理方法，新建li元素
+			function getRequirementListSuccess(data)
+			{
+				var requirementUl=$('#requirementUl');
+				if(!data){
+					mui.toast('未能获取到更多数据');
+					return ;
+				}
+
+				var firstFrag ='';
+				for(var i in data)
+				{
+					firstFrag +=fillRequirementListLi(data[i]);
+				}
+				startSn += data.length;
+				console.log(startSn);
+				
+				requirementUl.append(firstFrag);
+			}
+
+			function getRequirementListFailed(data){
+				console.log(JSON.stringify(data));
+				toastMSG = '获取需求列表失败';
+				mui.toast(toastMSG);
+			}
+
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				console.log('pullupRefresh');
+				//alert('pullupRefresh id:' + this.element.getAttribute('id'));
+				var self = this;
+				setTimeout(function() {
+					getRequirementList(startSn);
+					self.endPullupToRefresh(false); 
+				}, 1000);
+	
+			}
+			
+			function callback(){
+				//$('.content .filter_item').removeClass('active');
+				document.body.style.overflow='';
+			}
+
+		</script>
+	</body>
+
+</html>
