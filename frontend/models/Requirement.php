@@ -175,8 +175,8 @@ class Requirement extends ActiveRecord
                 $requirement['contactor']=$user['nickname'];
 
                 $res[$i]=$requirement;
-                $i++;
             }
+            $i++;
         }
         return $res;
     }
@@ -257,6 +257,19 @@ class Requirement extends ActiveRecord
 
         $arr['rscode']=0;
         return $arr;
+    }
+
+    public static function GetRequirementByAgentid($jsonObj){
+        Yii::error("Requirement::GetRequirementByAgentid jsonObj is : ".print_r($jsonObj,1)."\n");
+        $query = new Query;
+        $query  ->select(['t_requirement.*', 't_user.picture as picture'])  
+                ->from('t_requirement')
+                ->join('LEFT OUTER JOIN', 't_user', 't_user.id =t_requirement.userid')
+                ->where(['t_requirement.agentid' => $jsonObj->userid]);
+        $command = $query->createCommand();
+        $res = $command->queryAll(); 
+        Yii::error("Requirement::GetRequirementByAgentid res is : ".print_r($res,1)."\n");
+        return $res;
     }
 
 }

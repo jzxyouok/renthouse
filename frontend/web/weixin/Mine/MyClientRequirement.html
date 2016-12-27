@@ -13,11 +13,13 @@
 			.mui-table-view.mui-grid-view{
 				padding: 0;
 			}
+			
 			.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-9,.col-xs-10,.col-xs-12
 			{
 				padding-left: 5px;
 				padding-right: 5px;
 			}
+			
 			.mui-scroll-wrapper
 			{
 				top: 44px;
@@ -27,9 +29,11 @@
 			{
 				margin-top:0px;
 			}
+			
 			.content{
 				font-size:.9rem;
 			}
+
 			.mui-table-view-cell{
 				padding-left:0px;
 				padding-right: 0px;
@@ -49,8 +53,7 @@
 	<body>
         <header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">我的需求</h1>
-			
+			<h1 class="mui-title">委托我的需求</h1>
 		</header>
 		
 		<div class="mui-content">
@@ -61,9 +64,7 @@
 							<span style="color: gray; font-size: 0.9em;">无需求</span>
 						</div>
 					</li>
-
 			    </ul>
-			
 			</div>	
 		</div>
 		<div style="height: 50px;">
@@ -92,7 +93,7 @@
 				var userInfo=new Object();
 				userInfo.userid=userid;
 
-				ajax_get_requirement_byuserid(userInfo,getRequirementByUserIdSuccess,getRequirementByUserIdFailed);
+				ajax_get_requirement_by_agentid(userInfo,getRequirementByUserIdSuccess,getRequirementByUserIdFailed);
 				
 				wxShare();
 			});
@@ -133,12 +134,12 @@
 				localStorage.setItem("requirementId", requirementId);
 				var requiementPublishuserId = this.getAttribute('publishuser-id');
 
-				var dstUrl = './MyRequirementDetail.html?requirementId='+requirementId;
+				var dstUrl = './MyClientRequirementDetail.html?requirementId='+requirementId;
 				dstUrl += '&userId=' + requiementPublishuserId;
 				
 				mui.openWindow({
 					url: dstUrl,
-					id: 'MyRequirementDetail.html'
+					id: 'MyClientRequirementDetail.html'
 				});
 			});
 			

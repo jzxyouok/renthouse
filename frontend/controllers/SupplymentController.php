@@ -77,6 +77,7 @@ class SupplymentController extends Controller
             "description"=>$res1['description'],
             "createtime"=>$res1['createtime'],
             "updatetime"=>$res1['updatetime'],
+            "agentid"=>$res1['agentid'],
             "picture"=>$res2
         );
         return json_encode($res);
@@ -118,7 +119,14 @@ class SupplymentController extends Controller
         return json_encode($res);
     }
 
-
+    public function actionGetClientHouse()
+    {
+        Yii::error("Supplyment::GetClientHouse\n");
+        $data=Yii::$app->request->rawBody;
+        $obj = json_decode($data);
+        $retstr=Supplyment::GetClientHouse($obj);
+        return json_encode($retstr);
+    }
 }
 
 ?>

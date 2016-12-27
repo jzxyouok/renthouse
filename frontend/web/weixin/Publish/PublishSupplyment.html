@@ -316,8 +316,11 @@
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
-						<div>
-							<label style="width: 90px;padding-left: 15px;">委托给该区域的中介</label><br/>
+						<div class="mui-hidden col-xs-10 mui-text-left" id="promptDivLi">
+							<label style="width: 90px;padding-left: 15px;">委托给该区域的中介</label>
+						</div>
+						<div class="col-xs-2 mui-text-right">
+							<input type="checkbox" id="id-setAgent" onclick="setAgent()">
 						</div>
 					</li>
 					<ul id="agentlistUl" class="mui-table-view">
@@ -393,6 +396,7 @@
 		<script src="../js/wxShare.js"></script>
 		<script type="text/javascript" charset="UTF-8">
 			var startSn = 0;
+			var setAgentFlag = 0;
 		    var byId = function(id) {
 				return document.getElementById(id);
 			};
@@ -410,6 +414,8 @@
 				var url = 'http://www.lovespace.cc/weixin/Publish/PublishSupplyment.html';
 				upload.setHostUrl(url);
 				upload.initJssdkConfig();
+				setAgentFlag=($("#id-setAgent").attr("checked")=="checked"?0:1);
+				console.log('setAgentFlag is '+setAgentFlag);
 				getAgentList(0,6);
 			});
 
@@ -443,13 +449,14 @@
 				console.log('setAccommodationProof');
 			}
 
-			function check()
-			{
-				document.getElementById("check1").checked=true
-			}
-			function uncheck()
-			{
-				document.getElementById("check1").checked=false
+			function setAgent(){
+				setAgentFlag=($("#id-setAgent").attr("checked")=="checked"?0:1);
+				console.log('setAgentFlag is '+setAgentFlag);
+				if(setAgentFlag==1){
+					$('#agentlistUl').addClass('mui-hidden');
+				}else if(setAgentFlag==0){
+					$('#agentlistUl').removeClass('mui-hidden');
+				}
 			}
 
 			var gSupplyment = JSON.parse(localStorage.getItem('Supplyment'));
@@ -529,7 +536,13 @@
 				supplymentInfo.contactor=LoginUserInfo.nickname;
 				supplymentInfo.tel=LoginUserInfo.phone;
 				supplymentInfo.description=$("#id-description").val();
-				supplymentInfo.agentid=localStorage.getItem("agentId");
+				if(setAgentFlag==0){
+					supplymentInfo.agentid=localStorage.getItem("agentId");
+					localStorage.removeItem("agentId");
+				}else{
+					supplymentInfo.agentid=0;
+				}
+				
 				
 				var pictures = new Array();
 				var picCnt = paths.length;
@@ -543,9 +556,7 @@
 				//alert(JSON.stringify(supplymentInfo));
 				
 				ajax_add_supplyment(supplymentInfo,addSupplymentSuc,addSupplymentFailed);
-			} 
-
-
+			}
 
 			function addSupplymentSuc(data) {
 				console.log('addSupplymentSuc:'+JSON.stringify(data));
@@ -600,13 +611,11 @@
 				mui.toast(toastMSG);
 			}
 
-
 			function getValue(obj) { 
 			    var value = obj.id;
 			    console.log(value);
 			    localStorage.setItem("agentId",value);
 			}
-
 			
 			function getAgentList(startsn,countsn)
 			{
@@ -634,8 +643,15 @@
 			{
 				var agentlistUl=$('#agentlistUl');
 				if(!data){
-					mui.toast('未能获取到更多中介数据');
+					// mui.toast('未能获取到更多中介数据');
 					return ;
+				}
+				
+				$('#promptDivLi').removeClass('mui-hidden');
+				if(setAgentFlag==1){
+					$('#agentlistUl').addClass('mui-hidden');
+				}else if(setAgentFlag==0){
+					$('#agentlistUl').removeClass('mui-hidden');
 				}
 
 				var firstFrag ='';

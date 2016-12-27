@@ -240,8 +240,11 @@
 					</li>
 
 					<li class="mui-table-view-cell">
-						<div>
-							<label style="width: 90px;padding-left: 15px;">委托给该区域的中介</label><br/>
+						<div class="mui-hidden col-xs-10 mui-text-left" id="promptDivLi">
+							<label style="width: 90px;padding-left: 15px;">委托给该区域的中介</label>
+						</div>
+						<div class="mui-hidden col-xs-2 mui-text-right">
+							<input type="checkbox" id="id-setAgent" onclick="setAgent()">
 						</div>
 					</li>
 					<ul id="agentlistUl" class="mui-table-view">
@@ -316,6 +319,7 @@
 		<script src="../js/wxShare.js"></script>
 		<script type="text/javascript" charset="UTF-8">
 			var startSn = 0;
+			var setAgentFlag = 0;
 		    var byId = function(id) {
 				return document.getElementById(id);
 			};
@@ -331,6 +335,8 @@
 				LoginUserInfo = JSON.parse(localStorage.getItem("zufangLoginUserInfo"));
 				modify();
 				wxShare();
+				setAgentFlag=($("#id-setAgent").attr("checked")=="checked"?0:1);
+				console.log('setAgentFlag is '+setAgentFlag);
 				getAgentList(0,6);
 			});
 
@@ -363,14 +369,15 @@
 				console.log('setAccommodationProof');
 			}
 
-			// function check()
-			// {
-			// 	document.getElementById("check1").checked=true
-			// }
-			// function uncheck()
-			// {
-			// 	document.getElementById("check1").checked=false
-			// }
+			function setAgent(){
+				setAgentFlag=($("#id-setAgent").attr("checked")=="checked"?0:1);
+				console.log('setAgentFlag is '+setAgentFlag);
+				if(setAgentFlag==1){
+					$('#agentlistUl').addClass('mui-hidden');
+				}else if(setAgentFlag==0){
+					$('#agentlistUl').removeClass('mui-hidden');
+				}
+			}
 
 			var gRequirement = JSON.parse(localStorage.getItem('Requirement'));
 			console.log("gRequirement.address "+gRequirement.address);
@@ -446,7 +453,12 @@
 				requirementInfo.contactor=LoginUserInfo.nickname;
 				requirementInfo.tel=LoginUserInfo.phone;
 				requirementInfo.description=$("#id-description").val();
-				requirementInfo.agentid=localStorage.getItem("agentId");
+				if(setAgentFlag==0){
+					requirementInfo.agentid=localStorage.getItem("agentId");
+					localStorage.removeItem("agentId");
+				}else{
+					requirementInfo.agentid=0;
+				}
 				console.log(JSON.stringify(requirementInfo));
 
 				ajax_add_requirement(requirementInfo,addRequirementSuc,addRequirementFailed);
@@ -501,8 +513,15 @@
 			{
 				var agentlistUl=$('#agentlistUl');
 				if(!data){
-					mui.toast('未能获取到更多中介数据');
+					// mui.toast('未能获取到更多中介数据');
 					return ;
+				}
+
+				$('#promptDivLi').removeClass('mui-hidden');
+				if(setAgentFlag==1){
+					$('#agentlistUl').addClass('mui-hidden');
+				}else if(setAgentFlag==0){
+					$('#agentlistUl').removeClass('mui-hidden');
 				}
 
 				var firstFrag ='';

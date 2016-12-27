@@ -63,6 +63,7 @@
 			.mui-table-view-cell:after {
 				right: 15px;
 			}
+
 		</style>
 	</head>
 
@@ -76,9 +77,7 @@
 				<ul id="houseInfoList1" class="mui-table-view">
 					<li class="mui-table-view-cell">
 						<div class="mui-input-row">
-							<span id="hintline">房源信息仅作为需求匹配，不会泄露个人隐私</span><span id="modifyrequirement" class="mui-icon mui-icon-compose" style="float:right;padding-right: 10px;"></span>
-				    	<span id="deleteRequirement" class="mui-icon mui-icon-close" style="padding-right: 5px;float:right;"></span>
-							
+							<span id="hintline">房源信息仅作为需求匹配，不会泄露个人隐私</span>
 						</div>
 					</li>					
 				</ul>
@@ -134,15 +133,7 @@
 							<p><span id="contactor-name">联系人：nickname  </span></p>
 						</div>
 						<div class="col-xs-7 mui-text-right">
-							<p id="contactor-tel" style="">联系电话：13816256497</p>
-						</div>
-					</li>
-					<li class="mui-table-view-cell mui-hidden" id="agent">
-						<div class="col-xs-5 mui-text-left">
-							<p><span id="agent-name">经纪人：nickname  </span></p>
-						</div>
-						<div class="col-xs-7 mui-text-right">
-							<p id="agent-tel" style="">联系电话：13816256497</p>
+							<p id="contactor-tel" class="publish-date" style="">联系电话：13816256497</p>
 						</div>
 					</li>
 					<li class="mui-table-view-cell">
@@ -264,12 +255,6 @@
 				document.getElementById('contactor-name').innerHTML="联系人："+LoginUserInfo.nickname;
 				document.getElementById('contactor-tel').innerHTML="联系电话："+LoginUserInfo.phone;
 
-				if(data.agentid){
-					$('#agent').removeClass('mui-hidden');
-					document.getElementById('agent-name').innerHTML="经纪人："+data.contactor;
-					document.getElementById('agent-tel').innerHTML="联系电话："+data.tel;
-				}
-
 				localStorage.setItem("zufangMyRequirement",JSON.stringify(data));
 			}
 
@@ -277,44 +262,7 @@
 				console.log(JSON.stringify(data));
 				toastMSG = '获取需求失败';
 				mui.toast(toastMSG);
-			}
-
-
-			//增加需求修改按钮事件
-			document.querySelector('#modifyrequirement').addEventListener('tap', function() {
-				console.log('modifyrequirement click');
-				mui.openWindow({
-					url: './MyRequirementModify.html'
-				});
-			}, false);
-			
-			//增加需求删除按钮事件
-			document.querySelector('#deleteRequirement').addEventListener('tap', function() {
-				console.log('deleteRequirement click');
-				if(confirm("确认要删除此需求吗？"))
-				{
-					console.log('begin delete requirement');
-					ajax_delete_requirement(reqObj,deleteRequirementByIdSuccess,deleteRequirementByIdFailed);
-				}
-				else
-				{
-					console.log('cancel delete requiement');
-				}
-				
-			}, false);
-			
-			function deleteRequirementByIdSuccess(data,options){
-				console.log(JSON.stringify(data));
-				toastMSG = '删除需求成功';
-				mui.toast(toastMSG);
-				mui.back();
-			}
-
-			function deleteRequirementByIdFailed(data,options){
-				console.log(JSON.stringify(data));
-				mui.toast("网络异常，删除需求失败，请重试！");
-				mui.toast(toastMSG);
-			}
+			}			
 			
 		</script>
 	</body>

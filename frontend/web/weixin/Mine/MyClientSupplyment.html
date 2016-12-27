@@ -8,16 +8,19 @@
     	<title>易租房</title>
 		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../css/style.css?v=0.01" />
-		<link rel="shortcut icon"  type="image/x-icon" src="img/favicon.ico">
+		<link rel="shortcut icon"  type="image/x-icon" href="img/favicon.ico">
 		<style type="text/css">
+
 			.mui-table-view.mui-grid-view{
 				padding: 0;
 			}
+			
 			.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-9,.col-xs-10,.col-xs-12
 			{
 				padding-left: 5px;
 				padding-right: 5px;
 			}
+			
 			.mui-scroll-wrapper
 			{
 				top: 44px;
@@ -27,9 +30,11 @@
 			{
 				margin-top:0px;
 			}
+			
 			.content{
 				font-size:.9rem;
 			}
+
 			.mui-table-view-cell{
 				padding-left:0px;
 				padding-right: 0px;
@@ -43,36 +48,37 @@
 				height: 21px;
 			}
 		</style>
-		
 	</head>
 
 	<body>
         <header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">我的需求</h1>
+			<h1 class="mui-title">委托我的房源</h1>
 			
 		</header>
 		
 		<div class="mui-content">
-			<div id="requirement">
-				<ul id='requirementUl' class="mui-table-view">					
+			<div id="houselist">
+				<ul id="houseUl" class="mui-table-view">
 					<li id="promptDivLi" class="mui-table-view-cell mui-media mui-hidden">
 						<div id="promptDiv" class="prompt-div" style="text-align: center; margin-top: 1px;">
-							<span style="color: gray; font-size: 0.9em;">无需求</span>
+							<span style="color: gray; font-size: 0.9em;">无房源</span>
 						</div>
 					</li>
-
+					
 			    </ul>
 			
 			</div>	
+			
 		</div>
 		<div style="height: 50px;">
 		</div>
 		
+		<!-- <script src="../js/foot.js" charset="UTF-8"></script> -->
 		<script src="../js/mui.min.js" charset="UTF-8"></script>
 		<script src="../js/common/ajax.js"></script>
+		<script src="../js/house.js"></script>
 		<script src="../js/dom.create.js"></script>
-		<script src="../js/requirement.js"></script>
 		<script src="../js/wxShare.js"></script>
 		<script src="../js/jquery.min.js"></script>
 		<script type="text/javascript" charset="UTF-8">
@@ -81,73 +87,80 @@
 				swipeBack: false
 			});
 			
-			mui.ready(function() {
-				$('#mineLink').addClass('mui-active');
+			mui.back = function(){
+				mui.openWindow({
+					url: '../mine.html'
+				});
+			};
+			
+	        mui.ready(function() {
+				$('#mineLink').addClass('mui-active')
 				var data = localStorage.getItem('zufangLoginUserInfo');
 				var user = JSON.parse(data);
-				
 				var userid = user.id;
-				console.log("userid:"+userid);
-
+				
 				var userInfo=new Object();
 				userInfo.userid=userid;
 
-				ajax_get_requirement_byuserid(userInfo,getRequirementByUserIdSuccess,getRequirementByUserIdFailed);
+				ajax_get_client_houselist(userInfo,getHouseListSuccess,getHouseListFail);
 				
+				//初始化微信分享
 				wxShare();
 			});
 			
-			//获取需求列表成功后的处理方法，新建li元素
-			function getRequirementByUserIdSuccess(data)
+			function getHouseListSuccess(data)
 			{
-				console.log('getRequirementByUserIdSuccess data:'+JSON.stringify(data));
+				console.log('getHouseListSuccess data:'+JSON.stringify(data));
 				if(!data || data.length == 0)
 				{
 					showPromptInfo();
 					return;
 				}
 
-				var requirementUl=$('#requirementUl');
+				var houseUl=$('#houseUl');
 				var firstFrag ='';
 				for(var i in data)
 				{
-					firstFrag +=fillRequirementListLi(data[i]);
+					firstFrag +=fillMySupplymentListLi(data[i]);
 				}
 				startSn += data.length;
 				console.log(startSn);
 				
-				requirementUl.append(firstFrag);
+				houseUl.append(firstFrag);
 			}
 
-			function getRequirementByUserIdFailed(data)
+			function getHouseListFail(data)
 			{
-				console.log(JSON.stringify(data));
-				toastMSG = '获取需求列表失败';
+				console.log('getHouseListFail data:'+JSON.stringify(data));
+				toastMSG = '网络异常，信息获取失败，请重试！';
 				mui.toast(toastMSG);
 			}
 	
-	        //增加需求列表中tap事件
-			mui('#requirementUl').on('tap', '.requirement-brief', function() {
-				var requirementId = this.getAttribute('requirement-id');
-				console.log('requirementId:'+requirementId);
-				localStorage.setItem("requirementId", requirementId);
-				var requiementPublishuserId = this.getAttribute('publishuser-id');
+	        //增加房源列表中tap事件
+			mui('#houseUl').on('tap', '.supplyment-brief', function() {
+				var houseId = this.getAttribute('supplyment-id');
+				console.log('houseId:'+houseId);
+				localStorage.setItem("houseId", houseId);
 
-				var dstUrl = './MyRequirementDetail.html?requirementId='+requirementId;
-				dstUrl += '&userId=' + requiementPublishuserId;
+				var supplymentId = this.getAttribute('supplyment-id');
+				console.log('requirementId:'+supplymentId);
+				localStorage.setItem("supplymentId", supplymentId);
+				var supplymentPublishuserId = this.getAttribute('publishuser-id');
+
+				
+				var dstUrl = './MyClientSupplymentDetail.html?supplymentId='+supplymentId;
+				dstUrl += '&userId=' + supplymentPublishuserId;
 				
 				mui.openWindow({
 					url: dstUrl,
-					id: 'MyRequirementDetail.html'
+					id: './MyClientSupplymentDetail.html'
 				});
 			});
 			
-
 			function showPromptInfo()
 			{
 				$('#promptDivLi').removeClass('mui-hidden');
 			}
-
 		</script>
 	</body>
 

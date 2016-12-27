@@ -82,6 +82,16 @@ class RequirementController extends Controller
         return json_encode($reqlist);
     }
 
+    public function actionGetRequirementByAgentid(){
+        $data=Yii::$app->request->rawBody;
+        $obj = json_decode($data);
+        $reqlist=Requirement::GetRequirementByAgentid($obj);
+            if(empty($reqlist)){
+                return 'null';
+        }
+        return json_encode($reqlist);
+    }
+
 }
 
 ?>

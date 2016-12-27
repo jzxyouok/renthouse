@@ -21,7 +21,9 @@ var getRequirementListUrl = baseRequirementUrl + "get-requirement-list";
 var getSupplymentListUrl = baseSupplymentUrl + "get-supplyment-list";
 var getUserByOpenidUrl = baseUserUrl + "get-user-by-openid";
 var getRequirementByUserIdUrl = baseRequirementUrl + "get-requirement-byuserid";
+var getRequirementByAgentIdUrl = baseRequirementUrl + "get-requirement-by-agentid";
 var getHouseListUrl = baseSupplymentUrl + "get-my-house";
+var getClientHouseListUrl = baseSupplymentUrl + "get-client-house";
 var modifyRequirementUrl = baseRequirementUrl + "modify-requirement";
 var modifySupplymentUrl = baseSupplymentUrl + "modify-supplyment";
 var deleteSupplymentUrl = baseSupplymentUrl + "delete-supplyment-by-id";
@@ -139,10 +141,22 @@ function sendCommonAjax(options,url,sucFun,failFun)
 		sendCommonAjax(options,getRequirementByUserIdUrl,sucFun,failFun);
 	}
 
+	w.ajax_get_requirement_by_agentid = function(options,sucFun,failFun)
+	{
+		console.log('ajax_get_requirement_by_agentid');
+		sendCommonAjax(options,getRequirementByAgentIdUrl,sucFun,failFun);
+	}
+
 	w.ajax_get_houselist = function(options,sucFun,failFun)
 	{
 		console.log('ajax_get_houselist');
 		sendCommonAjax(options,getHouseListUrl,sucFun,failFun);
+	}
+
+	w.ajax_get_client_houselist = function(options,sucFun,failFun)
+	{
+		console.log('ajax_get_client_houselist');
+		sendCommonAjax(options,getClientHouseListUrl,sucFun,failFun);
 	}
 
 	w.ajax_modify_requirement = function(options,sucFun,failFun)

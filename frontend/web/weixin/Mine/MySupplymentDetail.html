@@ -51,18 +51,15 @@
 				padding-right: 15px;
 				width: 100%;
 			}
-
 			.contained input{
 				margin-left: 15px;
 				margin-right: 5px;
 				vertical-align: middle;
 			}
-
 			.contained label{
 				margin-right: 15px;
 				vertical-align: middle;
 			}
-
 			.mui-table-view-cell:after {
 				right: 15px;
 			}
@@ -140,7 +137,15 @@
 								<p><span id="contactor-name">联系人：nickname  </span></p>
 							</div>
 							<div class="col-xs-7 mui-text-right">
-								<p id="contactor-tel" class="publish-date" style="">联系电话：13816256497</p>
+								<p id="contactor-tel" style="">联系电话：13816256497</p>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-hidden" id="agent">
+							<div class="col-xs-5 mui-text-left">
+								<p><span id="agent-name">经纪人：nickname  </span></p>
+							</div>
+							<div class="col-xs-7 mui-text-right">
+								<p id="agent-tel" style="">联系电话：13816256497</p>
 							</div>
 						</li>
 						<li class="mui-table-view-cell">
@@ -263,6 +268,12 @@
 
 				document.getElementById('contactor-name').innerHTML="联系人："+LoginUserInfo.nickname;
 				document.getElementById('contactor-tel').innerHTML="联系电话："+LoginUserInfo.phone;
+
+				if(data.agentid){
+					$('#agent').removeClass('mui-hidden');
+					document.getElementById('agent-name').innerHTML="经纪人："+data.contactor;
+					document.getElementById('agent-tel').innerHTML="联系电话："+data.tel;
+				}
 
 				//处理房源图片
 	        	getHouseDetailListSuccess(data.picture);

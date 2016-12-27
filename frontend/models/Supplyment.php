@@ -118,7 +118,6 @@ class Supplyment extends ActiveRecord
         
     }
 
-
     public static function GetSupplyment($jsonObj)
     {
     	Yii::error("Supplyment::GetSupplyment jsonObj is : ".print_r($jsonObj,1)."\n");
@@ -163,7 +162,6 @@ class Supplyment extends ActiveRecord
         return $supplyment;
     }
 
-
     public static function GetSupplymentList($jsonObj)
     {
     	Yii::error("Supplyment::GetSupplymentList jsonObj is : ".print_r($jsonObj,1)."\n");
@@ -185,12 +183,11 @@ class Supplyment extends ActiveRecord
                 $supplyment['contactor']=$user['nickname'];
 
                 $res[$i]=$supplyment;
-                $i++;
             }
+            $i++;
         }
         return $res;  
     }
-
 
     public static function DelHouseByHouseid($jsonObj)
     {
@@ -228,8 +225,6 @@ class Supplyment extends ActiveRecord
         Yii::error("res is ".print_r($res,1)."\n");
         return $res;
     }
-
-
 
     public static function modifySupplyment($jsonObj){
         Yii::error("Supplyment::modifySupplyment jsonObj is : ".print_r($jsonObj,1)."\n");
@@ -290,7 +285,6 @@ class Supplyment extends ActiveRecord
         }
     }
 
-
     public static function DeleteSupplymentById($jsonObj)
     {
         Yii::error("Supplyment::DeleteSupplymentById jsonObj is : ".print_r($jsonObj,1)."\n");
@@ -306,6 +300,20 @@ class Supplyment extends ActiveRecord
 
         $arr['rscode']=0;
         return $arr;
+    }
+
+    public static function GetClientHouse($jsonObj)
+    {
+        Yii::error("Supplyment::GetClientHouse jsonObj is : ".print_r($jsonObj,1)."\n");
+        $query = new Query;
+        $query  ->select(['t_supplyment.*', 't_user.picture as picture'])  
+                ->from('t_supplyment')
+                ->join('LEFT OUTER JOIN', 't_user', 't_user.id =t_supplyment.userid')
+                ->where(['t_supplyment.agentid' => $jsonObj->userid]); 
+        $command = $query->createCommand();
+        $res = $command->queryAll(); 
+        Yii::error("res is ".print_r($res,1)."\n");
+        return $res;
     }
 
 }

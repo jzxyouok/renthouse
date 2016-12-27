@@ -70,7 +70,7 @@
 						<div>
 							
 							<div style="width:70px; height:70px; border-radius:50%; overflow:hidden;margin-left: auto;margin-right: auto;margin-top:40px;">
-								<img id="headPic" style="width:70px; height:70px; " src="./img/head/chail.jpg" alt="个人头像" />
+								<img id="headPic" style="width:70px; height:70px; " src="" alt="个人头像" />
 							</div>
 							<p> <span id="nickname" style="color: black;"></span><span id="scoreSpan" style="color: yellow;"></span> &nbsp;
 							</p>
@@ -83,12 +83,22 @@
 				<ul class="mui-table-view" style="margin-top: 0px;">
 					<li class="mui-table-view-cell">
 						<a id="myRequirement" class="mui-navigate-right">
-							<span class="mui-icon iconfont icon-dingwei mine_list_font"></span> 我的需求
+							<span class="mui-icon iconfont mine_list_font"></span> 我的需求
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
 						<a id="myHouse" class="mui-navigate-right" >
-							<span class="mui-icon iconfont icon-dingwei mine_list_font"></span> 我的房源
+							<span class="mui-icon iconfont mine_list_font"></span> 我的房源
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-hidden" id="myClientRequirement">
+						<a class="mui-navigate-right">
+							<span class="mui-icon iconfont mine_list_font"></span> 委托我的需求
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-hidden" id="myClientHouse">
+						<a class="mui-navigate-right" >
+							<span class="mui-icon iconfont mine_list_font"></span> 委托我的房源
 						</a>
 					</li>
 					
@@ -146,7 +156,6 @@
 			}
 			//如果有openid，则根据openid 获取用户信息，同原有逻辑
 			mui.ready(function() {
-				$('#mineLink').addClass('mui-active');
 				//初始化界面用户信息
 				initUserInfo();
 				//初始化连接事件
@@ -159,12 +168,17 @@
 			function initUserInfo()
 			{
 				loginUser = JSON.parse(localStorage.getItem("zufangLoginUserInfo"));
+				console.log(JSON.stringify(loginUser));
 				if(loginUser)
 				{
 					//更新头像，昵称等信息
 					byId("headPic").src = loginUser.picture;
 					byId("nickname").innerText = loginUser.nickname;
 					byId("phone").innerText = loginUser.phone;
+					if(loginUser.agentflag==1){
+						$('#myClientRequirement').removeClass('mui-hidden');
+						$('#myClientHouse').removeClass('mui-hidden');
+					}
 				}
 				else
 				{
@@ -189,6 +203,17 @@
 				document.querySelector('#myHouse').addEventListener('tap', function() {
 	        		noPhoneRegAfterJumpUrl = "./MySupplyment.html";
 	        		hasPhoneJumpUrl = "./Mine/MySupplyment.html";
+	        		checkLoginUserPhone(noPhoneRegAfterJumpUrl,hasPhoneJumpUrl,noUserInfoJumpFlag,noLoginUserInfoBindUrl);
+				}, false);
+				document.querySelector('#myClientRequirement').addEventListener('tap', function() {
+	        		noPhoneRegAfterJumpUrl = "./MyClientRequirement.html";
+	        		hasPhoneJumpUrl = "./Mine/MyClientRequirement.html";
+	        		checkLoginUserPhone(noPhoneRegAfterJumpUrl,hasPhoneJumpUrl,noUserInfoJumpFlag,noLoginUserInfoBindUrl);
+				}, false);
+				
+				document.querySelector('#myClientHouse').addEventListener('tap', function() {
+	        		noPhoneRegAfterJumpUrl = "./MyClientSupplyment.html";
+	        		hasPhoneJumpUrl = "./Mine/MyClientSupplyment.html";
 	        		checkLoginUserPhone(noPhoneRegAfterJumpUrl,hasPhoneJumpUrl,noUserInfoJumpFlag,noLoginUserInfoBindUrl);
 				}, false);
 				

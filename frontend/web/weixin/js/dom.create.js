@@ -28,14 +28,12 @@ function getTimeAgo(time){
 (function(dom) {
 	//创建需求列表li元素
 	dom.fillRequirementListLi = function(data) {
-		console.log(data);
+		console.log(JSON.stringify(data));
 		var updatetime = data.updatetime;
 		updatetime = updatetime.replace(/-/g,'/'); // 将-替换成/，因为下面这个构造函数只支持/分隔的日期字符串
 		var date = new Date(updatetime);
 		var time = getTimeAgo(date.getTime());
-		var feeDom ='';
 
-		var subject = data.subject;
 		var liContent = '';
 
 		liContent += '<li class="mui-table-view-cell mui-media" id="requirementid-' + data.id+'">';
@@ -82,14 +80,12 @@ function getTimeAgo(time){
 
 	//创建房源列表li元素
 	dom.fillSupplymentListLi = function(data) {
-		console.log(data);
+		console.log(JSON.stringify(data));
 		var updatetime = data.updatetime;
 		updatetime = updatetime.replace(/-/g,'/'); // 将-替换成/，因为下面这个构造函数只支持/分隔的日期字符串
 		var date = new Date(updatetime);
 		var time = getTimeAgo(date.getTime());
-		var feeDom ='';
 
-		var subject = data.subject;
 		var liContent = '';
 
 
@@ -144,19 +140,6 @@ function getTimeAgo(time){
 		var date = new Date(updatetime);
 		var time = getTimeAgo(date.getTime());
 		
-		var userStr = localStorage.getItem('zufangLoginUserInfo');
-		var user = JSON.parse(userStr);
-		
-		var ele = document.createElement("li");
-		ele.className = "mui-table-view-cell mui-media";
-		ele.id = "requirementid-" + data.requirementid;
-		
-		console.log('date:'+data.updatetime);
-		var updatetime = data.updatetime;
-		var timearray=updatetime.split(" ");
-		var newupdatetime=timearray[0];
-		
-		var subject = '求购' + data.subject + data.housetype + '室';
 		var liContent = '';
 		
 		liContent += '<li class="mui-table-view-cell mui-media" id="requirementid-' + data.id+'">';
@@ -195,9 +178,8 @@ function getTimeAgo(time){
 		liContent += 		'</div>';	
 		liContent += 	'</div>';
 		liContent += '</li>';
-		
-		ele.innerHTML = liContent;
-		return ele;
+
+		return liContent;
 	}
 
 
@@ -212,15 +194,6 @@ function getTimeAgo(time){
 		updatetime = updatetime.replace(/-/g,'/'); // 将-替换成/，因为下面这个构造函数只支持/分隔的日期字符串
 		var date = new Date(updatetime);
 		var time = getTimeAgo(date.getTime());
-		var publishdate = data.updatetime;
-		var timearray=publishdate.split(" ");
-		var newupdatetime=timearray[0];
-		
-		var housetype = data.roomcnt + '室'+ data.hallcnt + '厅' + data.bathroomcnt + '卫';
-
-
-		var ele = document.createElement("li");
-		ele.className = "mui-table-view-cell mui-media ";
 		
 		var liContent = '';
 
@@ -261,9 +234,8 @@ function getTimeAgo(time){
 		liContent += 		'</div>';	
 		liContent += 	'</div>';
 		liContent += '</li>';
-		
-		ele.innerHTML = liContent;
-		return ele;
+
+		return liContent;
 	}
 
 
